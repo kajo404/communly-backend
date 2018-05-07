@@ -1,0 +1,33 @@
+{
+  "name": "communly-backend",
+  "version": "0.0.1",
+  "description": "communly backend",
+  "main": "index.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kajo404/communly-backend"
+  },
+  "author": "sebischair",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kajo404/communly-backend/issues"
+  },
+  "homepage": "https://github.com/kajo404/communly-backend.git#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js",
+    "devstart": "nodemon ./index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "helmet": "^3.11.0",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}
