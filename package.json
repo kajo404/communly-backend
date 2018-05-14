@@ -14,7 +14,14 @@
     "url": "https://github.com/kajo404/communly-backend/issues"
   },
   "homepage": "https://github.com/kajo404/communly-backend.git#readme",
+  "lint-staged": {
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
+  },
   "scripts": {
+    "precommit": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./index.js",
     "devstart": "nodemon ./index.js"
@@ -24,8 +31,11 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "helmet": "^3.11.0",
+    "husky": "^0.14.3",
     "jsonwebtoken": "^8.1.1",
-    "mongoose": "^5.0.7"
+    "lint-staged": "^7.1.0",
+    "mongoose": "^5.0.7",
+    "prettier": "^1.12.1"
   },
   "devDependencies": {
     "nodemon": "^1.14.12"
