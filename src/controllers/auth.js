@@ -55,10 +55,10 @@ const register = (req, res) => {
       message: 'The request body must contain a password property'
     });
 
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'username'))
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'name'))
     return res.status(400).json({
       error: 'Bad Request',
-      message: 'The request body must contain a username property'
+      message: 'The request body must contain a name property'
     });
   if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
     return res.status(400).json({
@@ -100,7 +100,7 @@ const register = (req, res) => {
 
 const me = (req, res) => {
   UserModel.findById(req.userId)
-    .select('username')
+    .select('email')
     .exec()
     .then(user => {
       if (!user)
