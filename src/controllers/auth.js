@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const config = require('../config');
-const ResidentModel = require('../models/resident');
+const UserModel = require('../models/user');
 
 const login = (req, res) => {
   if (!Object.prototype.hasOwnProperty.call(req.body, 'password'))
@@ -13,13 +13,12 @@ const login = (req, res) => {
       message: 'The request body must contain a password property'
     });
 
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'username'))
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
     return res.status(400).json({
       error: 'Bad Request',
-      message: 'The request body must contain a username property'
+      message: 'The request body must contain a email property'
     });
-
-  ResidentModel.findOne({ username: req.body.username })
+  UserModel.findOne({ name: req.body.name })
     .exec()
     .then(user => {
       // check if the password is valid
@@ -32,7 +31,7 @@ const login = (req, res) => {
       // if user is found and password is valid
       // create a token
       const token = jwt.sign(
-        { id: user._id, username: user.username },
+        { id: user._id, name: user.name },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
@@ -61,17 +60,21 @@ const register = (req, res) => {
       error: 'Bad Request',
       message: 'The request body must contain a username property'
     });
-
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a email property'
+    });
   const user = Object.assign(req.body, {
     password: bcrypt.hashSync(req.body.password, 8)
   });
 
-  ResidentModel.create(user)
+  UserModel.create(user)
     .then(user => {
       // if user is registered without errors
       // create a token
       const token = jwt.sign(
-        { id: user._id, username: user.username },
+        { id: user._id, name: user.name },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
@@ -96,7 +99,7 @@ const register = (req, res) => {
 };
 
 const me = (req, res) => {
-  ResidentModel.findById(req.userId)
+  UserModel.findById(req.userId)
     .select('username')
     .exec()
     .then(user => {

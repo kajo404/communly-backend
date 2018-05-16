@@ -4,10 +4,11 @@ const mongoose = require('mongoose');
 
 // Define the user schema
 
-const ResidentSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      trim: true,
       required: true
     },
     password: {
@@ -16,13 +17,23 @@ const ResidentSchema = new mongoose.Schema(
       unique: true
     },
     dateOfBirth: {
-      type: Date,
-      required: true
+      type: Date
     },
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+      trim: true,
+      match: [/.+\@.+\..+/, 'Please fill a valid email address']
+    },
+    roles: {
+      type: [
+        {
+          type: String,
+          enum: ['user', 'admin']
+        }
+      ],
+      default: ['user']
     }
   },
   {
@@ -33,7 +44,7 @@ const ResidentSchema = new mongoose.Schema(
   }
 );
 
-ResidentSchema.set('versionKey', false);
+UserSchema.set('versionKey', false);
 
 // Export the Movie model
-module.exports = mongoose.model('User', ResidentSchema);
+module.exports = mongoose.model('User', UserSchema);
