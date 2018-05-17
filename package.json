@@ -39,5 +39,9 @@
   },
   "devDependencies": {
     "nodemon": "^1.14.12"
+  },
+  "apidoc": {
+    "title": "Communly API",
+    "url" : "https://localhost:3000"
   }
 }

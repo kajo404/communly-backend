@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+var path = require('path');
 
 const middlewares = require('./middlewares');
 
@@ -15,12 +16,11 @@ api.use(helmet());
 api.use(bodyParser.json());
 api.use(bodyParser.urlencoded({ extended: false }));
 api.use(middlewares.allowCrossDomain);
+api.use('/apidoc', express.static('doc'));
 
 // Basic route
 api.get('/', (req, res) => {
-  res.json({
-    name: 'Communly Backend'
-  });
+  res.sendfile('doc/index.html');
 });
 
 // API routes
