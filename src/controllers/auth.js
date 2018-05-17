@@ -7,7 +7,7 @@ const config = require('../config');
 const UserModel = require('../models/user');
 
 /**
- * @api {post} /auth/login Request User Login
+ * @api {post} /auth/login Login
  * @apiName LoginUser
  * @apiGroup User
  *
@@ -22,7 +22,7 @@ const UserModel = require('../models/user');
           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZmM0N2YxMjM0ZDcyNGJjNGM5MGI0NCIsImlhdCI6MTUyNjU0NzU0MywiZXhwIjoxNTI2NjMzOTQzfQ.dKr6_xu8PMnBtd09Iu8Sp6dAQoYLW258AhJzbeHMx8M"
        }
  *
- * @apiError Bad Request The request body must contain a password/email property.
+ * @apiError BadRequest The request body must contain a password/email property.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
@@ -74,7 +74,7 @@ const login = (req, res) => {
 };
 
 /**
- * @api {post} /auth/register Register new user
+ * @api {post} /auth/register Register
  * @apiName RegisterUser
  * @apiGroup User
  *
@@ -93,7 +93,7 @@ const login = (req, res) => {
           "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZmM0N2YxMjM0ZDcyNGJjNGM5MGI0NCIsImlhdCI6MTUyNjU0NzU0MywiZXhwIjoxNTI2NjMzOTQzfQ.dKr6_xu8PMnBtd09Iu8Sp6dAQoYLW258AhJzbeHMx8M"
        }
  *
- * @apiError Bad Request The request body must contain a password/email/name property.
+ * @apiError BadRequest The request body must contain a password/email/name property.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
@@ -153,7 +153,7 @@ const register = (req, res) => {
 };
 
 /**
- * @api {get} /auth/me Find User by id
+ * @api {get} /auth/me Me
  * @apiName MeUser
  * @apiGroup User
  *
@@ -198,10 +198,10 @@ const me = (req, res) => {
 };
 
 /**
- * @api {get} /auth/logout Log the user out
+ * @api {get} /auth/logout Logout
  * @apiName LogoutUser
  * @apiGroup User
- * *   
+ *  
  * @apiSuccess {null} token Always returns null.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK

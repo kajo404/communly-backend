@@ -2,7 +2,7 @@
   {
     "type": "post",
     "url": "/auth/login",
-    "title": "Request User Login",
+    "title": "Login",
     "name": "LoginUser",
     "group": "User",
     "parameter": {
@@ -51,8 +51,8 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "Bad",
-            "description": "<p>Request The request body must contain a password/email property.</p>"
+            "field": "BadRequest",
+            "description": "<p>The request body must contain a password/email property.</p>"
           }
         ]
       },
@@ -70,8 +70,38 @@
   },
   {
     "type": "get",
+    "url": "/auth/logout",
+    "title": "Logout",
+    "name": "LogoutUser",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "null",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Always returns null.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n    {\n    \"token\": null\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/controllers/auth.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
     "url": "/auth/me",
-    "title": "Find User by id",
+    "title": "Me",
     "name": "MeUser",
     "group": "User",
     "parameter": {
@@ -146,7 +176,7 @@
   {
     "type": "post",
     "url": "/auth/register",
-    "title": "Register new user",
+    "title": "Register",
     "name": "RegisterUser",
     "group": "User",
     "parameter": {
@@ -217,8 +247,8 @@
           {
             "group": "Error 4xx",
             "optional": false,
-            "field": "Bad",
-            "description": "<p>Request The request body must contain a password/email/name property.</p>"
+            "field": "BadRequest",
+            "description": "<p>The request body must contain a password/email/name property.</p>"
           }
         ]
       },
@@ -233,35 +263,5 @@
     "version": "0.0.0",
     "filename": "src/controllers/auth.js",
     "groupTitle": "User"
-  },
-  {
-    "type": "get",
-    "url": "/auth/logout",
-    "title": "Log the user out",
-    "name": "LogoutUser",
-    "group": "User__",
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "null",
-            "optional": false,
-            "field": "token",
-            "description": "<p>Always returns null.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "    HTTP/1.1 200 OK\n    {\n    \"token\": null\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/controllers/auth.js",
-    "groupTitle": "User__"
   }
 ]
