@@ -57,3 +57,13 @@ npm run devstart
 ```bash
 npm start
 ```
+
+**Create API Documentation**
+```bash
+npm install -g apidoc
+```
+
+To create the documentation files run:
+```bash
+apidoc -f ".*\\.js$" -f ".*\\.ts$" -i src/controllers/ -o doc/
+```
