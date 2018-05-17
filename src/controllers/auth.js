@@ -82,7 +82,7 @@ const login = (req, res) => {
  * @apiParam {String} password Users password.
  * @apiParam {String} name Name the User would prefer to use
  * @apiParam {Date} [dateOfBirth] Date of birth for the User
- * @apiParam {String} [roles = ['user']] Array of Roles. Can be 'admin','user' or both
+ * @apiParam {String} [roles = 'user'] Array of Roles. Can be 'admin','user' or both
  * 
  * 
  * @apiSuccess {String} token Access token for the User.

@@ -215,7 +215,7 @@
             "type": "String",
             "optional": true,
             "field": "roles",
-            "defaultValue": "['user'",
+            "defaultValue": "user",
             "description": "<p>Array of Roles. Can be 'admin','user' or both</p>"
           }
         ]
