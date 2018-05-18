@@ -13,7 +13,7 @@ const UserModel = require('../models/user');
  *
  * @apiParam {String} email Users unique email address.
  * @apiParam {String} password Users password.
- * 
+ *
  * @apiSuccess {String} token Access token for the User.
  *
  * @apiSuccessExample Success-Response:
@@ -43,7 +43,7 @@ const login = (req, res) => {
       error: 'Bad Request',
       message: 'The request body must contain a email property'
     });
-  UserModel.findOne({ name: req.body.name })
+  UserModel.findOne({ email: req.body.email })
     .exec()
     .then(user => {
       // check if the password is valid
@@ -83,8 +83,8 @@ const login = (req, res) => {
  * @apiParam {String} name Name the User would prefer to use
  * @apiParam {Date} [dateOfBirth] Date of birth for the User
  * @apiParam {String} [roles = 'user'] Array of Roles. Can be 'admin','user' or both
- * 
- * 
+ *
+ *
  * @apiSuccess {String} token Access token for the User.
  *
  * @apiSuccessExample Success-Response:
@@ -119,6 +119,7 @@ const register = (req, res) => {
       error: 'Bad Request',
       message: 'The request body must contain a email property'
     });
+
   const user = Object.assign(req.body, {
     password: bcrypt.hashSync(req.body.password, 8)
   });
@@ -134,6 +135,7 @@ const register = (req, res) => {
           expiresIn: 86400 // expires in 24 hours
         }
       );
+      console.log(user);
 
       res.status(200).json({ token: token });
     })
@@ -159,7 +161,7 @@ const register = (req, res) => {
  *
  * @apiParam {String} id Users id.
  * @apiHeader {String} x-access-token token provided by the login.
- *   
+ *
  * @apiSuccess {String} _id user id.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -201,7 +203,7 @@ const me = (req, res) => {
  * @api {get} /auth/logout Logout
  * @apiName LogoutUser
  * @apiGroup User
- *  
+ *
  * @apiSuccess {null} token Always returns null.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
