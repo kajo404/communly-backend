@@ -1,1 +1,4 @@
 node_modules/
+.vscode/tasks.json
+Dockerfile
+docker-compose.yml
