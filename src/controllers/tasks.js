@@ -21,12 +21,3 @@ const create = (req, res) => {
 module.exports = {
   create
 };
-
-// const update = (req, res) => {
-
-//     TaskModel.findById(req.body.id)
-//     .exec()
-//     .then( task => {
-//       task.
-//     });
-// }
