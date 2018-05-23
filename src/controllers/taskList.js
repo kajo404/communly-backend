@@ -131,7 +131,6 @@ const create = (req, res) => {
 
   TaskListModel.create(taskList)
     .then(tasklist => {
-      console.log(taskList);
       res.status(200).json({
         taskList: taskList
       });

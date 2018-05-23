@@ -1,6 +1,6 @@
-# sebamaster-movie-backend application
+# Communly
 
-sebamaster-movie-frontend application can be found [here](https://github.com/sebischair/sebamaster-movie-frontend)
+The communly frontend application can be found [here](https://github.com/sebischair/sebamaster-movie-frontend)
 
 ## Prerequisites
 

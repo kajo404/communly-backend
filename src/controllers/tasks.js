@@ -38,7 +38,6 @@ const create = (req, res) => {
 
   TaskModel.create(task)
     .then(task => {
-      console.log(task);
       res.status(200).json({ task: task });
     })
     .catch(err => {
