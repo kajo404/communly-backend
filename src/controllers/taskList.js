@@ -1,11 +1,7 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-
 const config = require('../config');
 const TaskListModel = require('../models/taskList');
-const UserModel = require('../models/user');
 
 /**
  * @api {get} /tasklists/:id Get TaskList by ID

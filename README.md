@@ -1,6 +1,6 @@
 # Communly
 
-The communly frontend application can be found [here](https://github.com/sebischair/sebamaster-movie-frontend)
+The communly frontend application can be found [here](https://github.com/kajo404/communly-frontend/pulls)
 
 ## Prerequisites
 
