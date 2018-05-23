@@ -41,7 +41,19 @@ const getAll = (req, res) => {
   AnnouncementModel.find({})
     .exec()
     .then(announcements => {
-      res.status(200).json({ announcements });
+      AnnouncementModel.populate(
+        announcements,
+        { path: 'author', model: UserModel },
+        function(error, announcements) {
+          if (error) {
+            res.status(400).json({
+              error: 'Bad Request',
+              message: 'Generic error. Could not get announcements.'
+            });
+          }
+          res.status(200).json({ announcements });
+        }
+      );
     })
     .catch(err => {
       res.status(400).json({
