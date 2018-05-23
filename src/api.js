@@ -8,6 +8,7 @@ var path = require('path');
 const middlewares = require('./middlewares');
 
 const auth = require('./routes/auth');
+const announcements = require('./routes/announcements');
 
 const api = express();
 
@@ -25,5 +26,6 @@ api.get('/', (req, res) => {
 
 // API routes
 api.use('/auth', auth);
+api.use('/announcements', announcements);
 
 module.exports = api;

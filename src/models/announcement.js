@@ -10,7 +10,7 @@ const AnnouncementSchema = new mongoose.Schema({
     required: true
   },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', require: true },
-  creationDate: { type: Date, default: Date.now },
+  creationDate: { type: Date, default: Date.now() },
   content: { type: String },
   isVotable: { type: Boolean, default: false },
   upvotes: [
