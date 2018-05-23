@@ -2,7 +2,6 @@
 
 const config = require('../config');
 const TaskModel = require('../models/task');
-const TaskListModel = require('../models/taskList');
 
 const create = (req, res) => {
   const task = {
@@ -43,12 +42,36 @@ const update = (res, req) => {
     );
 };
 
-//Get all tasks of a specific board
+/**
+ * @api {get} /:id Get all tasks of a TaskBoard
+ * @apiName GetAllTasks
+ * @apiGroup Task
+ *
+ *
+ * @apiSuccess {Array} tasks Array of Task objects.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "tasks": [{ _id: 5b05a7dedc43694c58fffe01,
+                        name: 'dsfs',
+                        taskList: 5b05a7cedc43694c58fffdfa }]
+       }
+ *
+ * @apiError BadRequest Generic error. Could not get tasks.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Generic error. Could not get tasks."
+       }
+ */
 const getAll = (req, res) => {
   TaskModel.find({ taskList: req.params.id })
     .exec()
-    .then(tasklists => {
-      res.status(200).json({ tasks: tasklists });
+    .then(tasks => {
+      res.status(200).json({ tasks: tasks });
     })
     .catch(err => {
       res.status(400).json({

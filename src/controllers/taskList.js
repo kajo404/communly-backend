@@ -42,7 +42,9 @@ const getById = (req, res) => {
   TaskListModel.findById(req.params.id)
     .exec()
     .then(taskList => {
-      res.status(200).json({ taskList });
+      res.status(200).json({
+        taskList
+      });
     })
     .catch(err => {
       res.status(400).json({
@@ -63,7 +65,12 @@ const getById = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "taskLists": [{ title: 'some title', author: 'userID'}]
+          "taskLists": [ { tasks: [],
+                            members: [],
+                            _id: 5b057b36dc43694c58fffdef,
+                            title: 'Dinner Grocery List',
+                            creationDate: 2018-05-23T14:31:18.061Z }
+        ]
        }
  *
  * @apiError BadRequest Generic error. Could not get task lists.
@@ -76,11 +83,12 @@ const getById = (req, res) => {
        }
  */
 const getAll = (req, res) => {
-  // TODO: filter for user-relevant lists
   TaskListModel.find({})
     .exec()
     .then(tasklists => {
-      res.status(200).json({ tasklists });
+      res.status(200).json({
+        tasklists
+      });
     })
     .catch(err => {
       res.status(400).json({
@@ -103,7 +111,7 @@ const getAll = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "taskList": { title: 'some title', author: 'userID', ... TODO }
+          "taskList": { title: 'some title', author: 'userID', ... }
        }
  *
  * @apiError BadRequest The request body must contain an author and a title.
@@ -123,7 +131,10 @@ const create = (req, res) => {
 
   TaskListModel.create(taskList)
     .then(tasklist => {
-      res.status(200).json({ taskList: taskList });
+      console.log(taskList);
+      res.status(200).json({
+        taskList: taskList
+      });
     })
     .catch(err => {
       res.status(400).json({
