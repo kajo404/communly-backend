@@ -58,7 +58,7 @@ const update = (res, req) => {
     runValidators: true
   })
     .exec()
-    .then(movie => res.status(200).json(movie))
+    .then(task => res.status(200).json(task))
     .catch(error =>
       res.status(500).json({
         error: 'Internal server error',
