@@ -6,8 +6,8 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const TaskListController = require('../controllers/taskList');
 
-router.get('/', TaskListController.getAll);
-router.get('/:id', TaskListController.getById);
-router.post('/', TaskListController.create);
+router.get('/', middlewares.checkAuthentication, TaskListController.getAll);
+router.get('/:id', middlewares.checkAuthentication, TaskListController.getById);
+router.post('/', middlewares.checkAuthentication, TaskListController.create);
 
 module.exports = router;
