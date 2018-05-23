@@ -63,7 +63,7 @@ const getById = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "taskLists": [{ title: 'some title', author: 'userID', ... TODO }]
+          "taskLists": [{ title: 'some title', author: 'userID'}]
        }
  *
  * @apiError BadRequest Generic error. Could not get task lists.
@@ -112,7 +112,7 @@ const getAll = (req, res) => {
  *     HTTP/1.1 400 Not Found
  *     {
           "error": "Bad Request",
-          "message": "The request body must contain an author and a title"
+          "message": "Could not create Task List. The request body must contain an author and a title"
        }
  */
 const create = (req, res) => {
