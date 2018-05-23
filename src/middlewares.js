@@ -21,14 +21,23 @@ const checkAuthentication = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token = req.headers['authorization'];
 
-  if (!token)
+  if (!token) {
     return res.status(401).send({
       error: 'Unauthorized',
-      message: 'No token provided in the request'
+      message: 'No token provided in the request.'
     });
+  }
 
   // verifies secret and checks exp
-  jwt.verify(token.split(' ')[1], config.JwtSecret, (err, decoded) => {
+  const jwtToken = token.split(' ')[1];
+  if (!jwtToken) {
+    return res.status(401).send({
+      error: 'Unauthorized',
+      message: 'Invalid token in request.'
+    });
+  }
+
+  jwt.verify(jwtToken, config.JwtSecret, (err, decoded) => {
     if (err)
       return res.status(401).send({
         error: 'Unauthorized',

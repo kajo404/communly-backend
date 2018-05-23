@@ -1,6 +1,7 @@
 'use strict';
 
-const AnnouncementSchema = require('../models/announcement');
+const AnnouncementModel = require('../models/announcement');
+const UserModel = require('../models/user');
 
 /**
  * @api {get} /announcements Get all Announcements
@@ -37,7 +38,7 @@ const AnnouncementSchema = require('../models/announcement');
        }
  */
 const getAll = (req, res) => {
-  AnnouncementSchema.find({})
+  AnnouncementModel.find({})
     .exec()
     .then(announcements => {
       res.status(200).json({ announcements });
@@ -87,7 +88,6 @@ const getAll = (req, res) => {
        }
  */
 const create = (req, res) => {
-  console.log('in create', req);
   const announcement = {
     author: req.userId,
     title: req.body.title,
@@ -97,11 +97,18 @@ const create = (req, res) => {
     upvotes: [],
     downvotes: []
   };
-  console.log(announcement);
 
-  AnnouncementSchema.create(announcement)
+  AnnouncementModel.create(announcement)
     .then(announcement => {
-      res.status(200).json({ announcement: announcement });
+      announcement.populate('author', function(error, announcement) {
+        if (error) {
+          res.status(400).json({
+            error: 'Bad Request',
+            message: 'Could not create announcement'
+          });
+        }
+        res.status(200).json({ announcement: announcement });
+      });
     })
     .catch(err => {
       res.status(400).json({
