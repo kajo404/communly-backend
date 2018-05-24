@@ -180,7 +180,7 @@ const register = (req, res) => {
  */
 const me = (req, res) => {
   UserModel.findById(req.userId)
-    .select('email')
+    .select()
     .exec()
     .then(user => {
       if (!user)
