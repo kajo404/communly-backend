@@ -23,5 +23,5 @@ const AnnouncementSchema = new mongoose.Schema({
 
 AnnouncementSchema.set('versionKey', false);
 
-// Export the Movie model
+// Export the Task model
 module.exports = mongoose.model('Announcement', AnnouncementSchema);

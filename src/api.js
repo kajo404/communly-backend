@@ -9,6 +9,8 @@ const middlewares = require('./middlewares');
 
 const auth = require('./routes/auth');
 const announcements = require('./routes/announcements');
+const taskLists = require('./routes/taskLists');
+const tasks = require('./routes/tasks');
 
 const api = express();
 
@@ -27,5 +29,11 @@ api.get('/', (req, res) => {
 // API routes
 api.use('/auth', auth);
 api.use('/announcements', announcements);
+
+// taskLists routes
+api.use('/tasklists', taskLists);
+
+// tasks routes
+api.use('/tasks', tasks);
 
 module.exports = api;
