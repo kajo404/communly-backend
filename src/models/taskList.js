@@ -2,8 +2,7 @@
 
 const mongoose = require('mongoose');
 
-// Define the user schema
-
+// Define the TaskList schema
 const TaskListSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -17,5 +16,5 @@ const TaskListSchema = new mongoose.Schema({
 
 TaskListSchema.set('versionKey', false);
 
-// Export the Movie model
+// Export the TaskList model
 module.exports = mongoose.model('TaskList', TaskListSchema);

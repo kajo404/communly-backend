@@ -11,7 +11,7 @@ const allowCrossDomain = (req, res, next) => {
 
   // intercept OPTIONS method
   if ('OPTIONS' == req.method) {
-    res.status(200).send(200);
+    res.sendStatus(200);
   } else {
     next();
   }
@@ -21,11 +21,12 @@ const checkAuthentication = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token = req.headers['authorization'];
 
-  if (!token)
+  if (!token) {
     return res.status(401).send({
       error: 'Unauthorized',
       message: 'No token provided in the request'
     });
+  }
 
   // verifies secret and checks exp
   jwt.verify(token, config.JwtSecret, (err, decoded) => {

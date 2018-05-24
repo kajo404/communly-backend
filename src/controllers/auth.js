@@ -43,6 +43,7 @@ const login = (req, res) => {
       error: 'Bad Request',
       message: 'The request body must contain a email property'
     });
+
   UserModel.findOne({ email: req.body.email })
     .exec()
     .then(user => {
