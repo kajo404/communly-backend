@@ -25,23 +25,21 @@ const TaskListModel = require('../models/taskList');
        }
  */
 const fullProfile = (req, res) => {
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'id'))
     return res.status(400).json({
       error: 'Bad Request',
       message: 'The request body must contain a email property'
     });
-  UserModel.findOne({ email: req.body.email })
+  UserModel.findById(req.body.id)
     .exec()
     .then(user => {
-      res
-        .status(200)
-        .json({
-          id: user._id,
-          name: user.name,
-          dateOfBirth: user.dateOfBirth,
-          email: user.email,
-          roles: user.roles
-        });
+      res.status(200).json({
+        id: user._id,
+        name: user.name,
+        dateOfBirth: user.dateOfBirth,
+        email: user.email,
+        roles: user.roles
+      });
     })
     .catch(error =>
       res.status(404).json({
