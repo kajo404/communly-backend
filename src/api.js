@@ -12,7 +12,6 @@ const auth = require('./routes/auth');
 const announcements = require('./routes/announcements');
 const taskLists = require('./routes/taskLists');
 const tasks = require('./routes/tasks');
-const profile = require('./routes/profile');
 
 const api = express();
 
@@ -38,8 +37,5 @@ api.use('/tasklists', taskLists);
 
 // tasks routes
 api.use('/tasks', tasks);
-
-// profile routes
-api.use('/profile', profile);
 
 module.exports = api;
