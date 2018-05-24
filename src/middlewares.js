@@ -19,9 +19,11 @@ const allowCrossDomain = (req, res, next) => {
 
 const checkAuthentication = (req, res, next) => {
   // check header or url parameters or post parameters for token
-  const token = req.headers['Authorization'];
+
+  const token = req.headers['authorization'];
 
   const jwtToken = token.split(' ')[1];
+
   if (!jwtToken) {
     return res.status(401).send({
       error: 'Unauthorized',
