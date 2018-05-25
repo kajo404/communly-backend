@@ -61,7 +61,7 @@ const getById = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "taskLists": [ { tasks: [],
+          "taskLists": [ {
                             members: [],
                             _id: 5b057b36dc43694c58fffdef,
                             title: 'Dinner Grocery List',
@@ -139,6 +139,33 @@ const create = (req, res) => {
     });
 };
 
+/**
+ * @api {delete} /:id Deletes a task list by id
+ * @apiName DeleteById
+ * @apiGroup TaskList
+ *
+ *
+ * @apiSuccess {Object} taskList The deleted task list.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          members: [],
+          _id: 5b08379a8177f2995a46db13,
+          author: 5b05cdd090ed5121c826edf9,
+          title: 'Grocery list',
+          creationDate: 2018-05-25T16:19:38.711Z }
+       }
+ *
+ * @apiError BadRequest Generic error. Could not get delete the task list.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Generic error. Could not delete the task list."
+       }
+ */
 const deleteById = (req, res) => {
   TaskListModel.findByIdAndRemove(req.params.id)
     .exec()
