@@ -106,8 +106,24 @@ const getAll = (req, res) => {
     });
 };
 
+const deleteById = (req, res) => {
+  TaskModel.findByIdAndRemove(req.params.id)
+    .exec()
+    .then(tasklist => {
+      console.log('task deleted', tasklist);
+      res.status(200).json(tasklist);
+    })
+    .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Could not delete Task List'
+      });
+    });
+};
+
 module.exports = {
   create,
   update,
-  getAll
+  getAll,
+  deleteById
 };
