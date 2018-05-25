@@ -19,17 +19,11 @@ const allowCrossDomain = (req, res, next) => {
 
 const checkAuthentication = (req, res, next) => {
   // check header or url parameters or post parameters for token
+
   const token = req.headers['authorization'];
 
-  if (!token) {
-    return res.status(401).send({
-      error: 'Unauthorized',
-      message: 'No token provided in the request.'
-    });
-  }
-
-  // verifies secret and checks exp
   const jwtToken = token.split(' ')[1];
+
   if (!jwtToken) {
     return res.status(401).send({
       error: 'Unauthorized',
@@ -37,6 +31,7 @@ const checkAuthentication = (req, res, next) => {
     });
   }
 
+  // verifies secret and checks exp
   jwt.verify(jwtToken, config.JwtSecret, (err, decoded) => {
     if (err)
       return res.status(401).send({
