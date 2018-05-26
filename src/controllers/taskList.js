@@ -97,7 +97,7 @@ const getAll = (req, res) => {
 };
 
 /**
- * @api {post} / create a new TaskList
+ * @api {post} /tasklists create a new TaskList
  * @apiName CreateNewTaskList
  * @apiGroup TaskList
  *
@@ -143,6 +143,70 @@ const create = (req, res) => {
 };
 
 /**
+ * @api {post} /tasklists/addMember Add a new member to a task list.
+ * @apiName AddMemberToTaskList
+ * @apiGroup TaskList
+ *
+ * @apiParam {String} tasklistId The Id of the task list to add the user to.
+ * @apiParam {String} memberId The User to add to the task list.
+ *
+ * @apiSuccess {Object} taskList the taskList object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+        "members": [
+          "5afd440d8dfabd74b8297151",
+          "5afd440d8dfabd74b8297152",
+          "5b098c0e70d4c7235cf9a6a5"
+        ],
+        "_id": "5b098c0e70d4c7235cf9a6a6",
+        "author": "5afd440d8dfabd74b8297151",
+        "title": "test",
+        "creationDate": "2018-05-26T16:32:14.069Z"
+}
+ *
+ */
+const addUser = (req, res) => {
+  TaskListModel.findOne()
+    .exec()
+    .then(tasklist => {
+      if (!(req.isAdmin || req.userId == tasklist.author)) {
+        return res.status(403).json({
+          error: 'Access Denied',
+          message:
+            'Only admins or the author of the task list can add new members'
+        });
+      }
+      if (tasklist.members.indexOf(req.body.memberId) >= 0) {
+        return res.status(400).json({
+          error: 'Bad Request',
+          message: 'User already member of the task list'
+        });
+      } else {
+        TaskListModel.findOneAndUpdate(
+          {
+            _id: new mongoose.mongo.ObjectId(req.body.tasklistId)
+          },
+          {
+            $push: { members: new mongoose.mongo.ObjectId(req.body.memberId) }
+          },
+          { new: true }
+        )
+          .exec()
+          .then(result => {
+            res.status(200).json(result);
+          })
+          .catch(err => {
+            res.status(400).json({
+              error: 'Bad Request',
+              message: 'User could not be added to task list'
+            });
+          });
+      }
+    });
+};
+/**
  * @api {delete} /:id Deletes a task list by id
  * @apiName DeleteById
  * @apiGroup TaskList
@@ -171,7 +235,7 @@ const deleteById = (req, res) => {
             })
               .exec()
               .then(removed => {
-                res.status(200).json(removed);
+                res.status(200).json({ removed });
               });
           } else {
             res.status(403).json({
@@ -199,5 +263,6 @@ module.exports = {
   getAll,
   getById,
   create,
-  deleteById
+  deleteById,
+  addUser
 };
