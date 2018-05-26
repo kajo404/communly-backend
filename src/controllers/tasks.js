@@ -106,8 +106,48 @@ const getAll = (req, res) => {
     });
 };
 
+/**
+ * @api {delete} /:id Delete a task by id
+ * @apiName DeleteById
+ * @apiGroup Task
+ *
+ *
+ * @apiSuccess {Object} task The deleted task.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          _id: 5b08195d4143cb94bc8909fe,
+          name: 'dcdcdc',
+          taskList: 5b08028b3def607f8dda34c8
+       }
+ *
+ * @apiError BadRequest Generic error. Could not get delete task.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Generic error. Could not delete the task."
+       }
+ */
+const deleteById = (req, res) => {
+  TaskModel.findByIdAndRemove(req.params.id)
+    .exec()
+    .then(tasklist => {
+      res.status(200).json(tasklist);
+    })
+    .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Could not delete Task List'
+      });
+    });
+};
+
 module.exports = {
   create,
   update,
-  getAll
+  getAll,
+  deleteById
 };

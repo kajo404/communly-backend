@@ -10,7 +10,6 @@ const TaskListSchema = new mongoose.Schema({
   },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', require: true },
   creationDate: { type: Date, default: Date.now },
-  tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
   members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
