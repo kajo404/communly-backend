@@ -22,6 +22,12 @@ const checkAuthentication = (req, res, next) => {
 
   const token = req.headers['authorization'];
 
+  if (token === undefined) {
+    return res.status(400).send({
+      error: 'Bad Request',
+      message: 'No authorization token included'
+    });
+  }
   const jwtToken = token.split(' ')[1];
 
   if (!jwtToken) {
