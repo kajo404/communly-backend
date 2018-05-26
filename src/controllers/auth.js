@@ -157,9 +157,8 @@ const register = (req, res) => {
  * @api {get} /auth/me Me
  * @apiName MeUser
  * @apiGroup User
- *
- * @apiParam {String} id Users id.
- * @apiHeader {String} x-access-token token provided by the login.
+ * 
+ * @apiHeader {String} Authorization Bearer <token>
  *
  * @apiSuccess {String} _id user id.
  * @apiSuccessExample Success-Response:
