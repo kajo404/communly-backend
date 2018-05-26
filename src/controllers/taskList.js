@@ -2,6 +2,8 @@
 
 const config = require('../config');
 const TaskListModel = require('../models/taskList');
+const UserModel = require('../models/user');
+const mongoose = require('mongoose');
 
 /**
  * @api {get} /tasklists/:id Get TaskList by ID
@@ -167,15 +169,40 @@ const create = (req, res) => {
        }
  */
 const deleteById = (req, res) => {
-  TaskListModel.findByIdAndRemove(req.params.id)
+  UserModel.findOne({ _id: new mongoose.mongo.ObjectId(req.userId) })
     .exec()
-    .then(tasklist => {
-      res.status(200).json(tasklist);
+    .then(user => {
+      TaskListModel.findOne({ _id: new mongoose.mongo.ObjectId(req.params.id) })
+        .exec()
+        .then(tasklist => {
+          if (user.roles.includes('admin') || tasklist.author == req.userId) {
+            TaskListModel.remove({
+              _id: new mongoose.mongo.ObjectId(req.params.id)
+            })
+              .exec()
+              .then(removed => {
+                res.status(200).json(removed);
+              });
+          } else {
+            console.log(tasklist.author == req.userId);
+            res.status(403).json({
+              error: 'Not Allowed',
+              message: 'User is not allowed to remove task'
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(404).json({
+            error: 'Not Found',
+            message: 'Task List could not be found'
+          });
+        });
     })
     .catch(err => {
       res.status(400).json({
         error: 'Bad Request',
-        message: 'Could not delete Task List'
+        message: 'User does not exist'
       });
     });
 };
