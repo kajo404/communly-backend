@@ -101,8 +101,8 @@ const getAll = (req, res) => {
  * @apiName CreateNewTaskList
  * @apiGroup TaskList
  *
- * @apiParam {String} author The author of the task list.
  * @apiParam {String} title The title of the task list.
+ * @apiParam {String[]} [members] Users that can access this task list
  *
  * @apiSuccess {Object} taskList the taskList object.
  *
@@ -124,7 +124,8 @@ const getAll = (req, res) => {
 const create = (req, res) => {
   const taskList = {
     author: req.userId,
-    title: req.body.title
+    title: req.body.title,
+    members: req.body.members
   };
 
   TaskListModel.create(taskList)
@@ -152,21 +153,10 @@ const create = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          members: [],
-          _id: 5b08379a8177f2995a46db13,
-          author: 5b05cdd090ed5121c826edf9,
-          title: 'Grocery list',
-          creationDate: 2018-05-25T16:19:38.711Z }
-       }
+          "n": 1,
+          "ok": 1
+}
  *
- * @apiError BadRequest Generic error. Could not get delete the task list.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     {
-          "error": "Bad Request",
-          "message": "Generic error. Could not delete the task list."
-       }
  */
 const deleteById = (req, res) => {
   UserModel.findOne({ _id: new mongoose.mongo.ObjectId(req.userId) })
@@ -184,7 +174,6 @@ const deleteById = (req, res) => {
                 res.status(200).json(removed);
               });
           } else {
-            console.log(tasklist.author == req.userId);
             res.status(403).json({
               error: 'Not Allowed',
               message: 'User is not allowed to remove task'
@@ -192,7 +181,6 @@ const deleteById = (req, res) => {
           }
         })
         .catch(err => {
-          console.log(err);
           res.status(404).json({
             error: 'Not Found',
             message: 'Task List could not be found'
