@@ -136,8 +136,6 @@ const register = (req, res) => {
           expiresIn: 86400 // expires in 24 hours
         }
       );
-      console.log(user);
-
       res.status(200).json({ token: token });
     })
     .catch(error => {
