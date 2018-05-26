@@ -56,8 +56,9 @@ const login = (req, res) => {
 
       // if user is found and password is valid
       // create a token
+      const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
-        { id: user._id, name: user.name },
+        { id: user._id, name: user.name, isAdmin: isAdmin },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
@@ -129,8 +130,9 @@ const register = (req, res) => {
     .then(user => {
       // if user is registered without errors
       // create a token
+      const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
-        { id: user._id, name: user.name },
+        { id: user._id, name: user.name, isAdmin: isAdmin },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
