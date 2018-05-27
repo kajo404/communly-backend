@@ -187,7 +187,8 @@ const create = (req, res) => {
  * @apiName AddTaskToTaskList
  * @apiGroup TaskList
  *
- * @apiParam {String} memberId The User to add to the task list.
+ * @apiParam {String} name Name of the new task.
+ * @apiParam {String} [asignee] id of the user assigned to the task.
  *
  * @apiSuccess {Object} taskList the taskList object.
  *
@@ -222,7 +223,12 @@ const addTask = (req, res) => {
           _id: new mongoose.mongo.ObjectId(req.params.id)
         },
         {
-          $push: { tasks: re.body }
+          $push: {
+            tasks: {
+              name: req.body.name,
+              asignee: new mongoose.mongo.ObjectId(req.body.asignee)
+            }
+          }
         },
         { new: true },
         { upsert: true }
