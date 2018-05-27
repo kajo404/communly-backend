@@ -48,8 +48,8 @@ const getById = (req, res) => {
     })
     .populate({
       path: 'tasks',
-      select: ['name', 'asignee', 'isDone'],
-      populate: { path: asignee, select: 'name' }
+      select: ['name', 'assignee', 'isDone'],
+      populate: { path: 'assignee', select: 'name' }
     })
     .exec()
     .then(taskList => {
@@ -166,8 +166,8 @@ const create = (req, res) => {
     })
     .populate({
       path: 'tasks',
-      select: ['name', 'asignee', 'isDone'],
-      populate: { path: asignee, select: 'name' }
+      select: ['name', 'assignee', 'isDone'],
+      populate: { path: 'assignee', select: 'name' }
     })
     .then(tasklist => {
       res.status(200).json({
@@ -188,7 +188,7 @@ const create = (req, res) => {
  * @apiGroup TaskList
  *
  * @apiParam {String} name Name of the new task.
- * @apiParam {String} [asignee] id of the user assigned to the task.
+ * @apiParam {String} [assignee] id of the user assigned to the task.
  *
  * @apiSuccess {Object} taskList the taskList object.
  *
@@ -226,7 +226,7 @@ const addTask = (req, res) => {
           $push: {
             tasks: {
               name: req.body.name,
-              asignee: new mongoose.mongo.ObjectId(req.body.asignee)
+              assignee: new mongoose.mongo.ObjectId(req.body.assignee)
             }
           }
         },
@@ -243,8 +243,8 @@ const addTask = (req, res) => {
         })
         .populate({
           path: 'tasks',
-          select: ['name', 'asignee', 'isDone'],
-          populate: { path: asignee, select: 'name' }
+          select: ['name', 'assignee', 'isDone'],
+          populate: { path: assgnee, select: 'name' }
         })
         .exec()
         .then(result => {
@@ -319,8 +319,8 @@ const addUser = (req, res) => {
           })
           .populate({
             path: 'tasks',
-            select: ['name', 'asignee', 'isDone'],
-            populate: { path: asignee, select: 'name' }
+            select: ['name', 'assignee', 'isDone'],
+            populate: { path: 'assignee', select: 'name' }
           })
           .exec()
           .then(result => {
