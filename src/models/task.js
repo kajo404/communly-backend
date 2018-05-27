@@ -13,11 +13,6 @@ const TaskSchema = new mongoose.Schema({
     ref: 'User',
     require: false
   },
-  taskList: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'TaskList',
-    require: true
-  },
   isDone: { type: Boolean }
 });
 

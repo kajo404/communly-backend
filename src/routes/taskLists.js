@@ -15,9 +15,10 @@ router.delete(
   TaskListController.deleteById
 );
 router.post(
-  '/addMember',
+  '/:id/addMember',
   middlewares.checkAuthentication,
   TaskListController.addUser
 );
+router.post('/:id/addTask');
 
 module.exports = router;
