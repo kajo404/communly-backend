@@ -105,8 +105,8 @@ const getAll = (req, res) => {
     })
     .populate({
       path: 'tasks',
-      select: ['name', 'asignee', 'isDone'],
-      populate: { path: asignee, select: 'name' }
+      select: ['name', 'assignee', 'isDone'],
+      populate: { path: 'assignee', select: 'name' }
     })
     .exec()
     .then(tasklists => {
