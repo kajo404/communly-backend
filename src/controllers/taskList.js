@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require('../config');
+const TaskModel = require('../models/task');
 const TaskListModel = require('../models/taskList');
 const UserModel = require('../models/user');
 const mongoose = require('mongoose');
@@ -169,6 +170,7 @@ const create = (req, res) => {
       select: ['name', 'assignee', 'isDone'],
       populate: { path: 'assignee', select: 'name' }
     })
+    .exec()
     .then(tasklist => {
       res.status(200).json({
         tasklist
@@ -225,8 +227,7 @@ const addTask = (req, res) => {
         {
           $push: {
             tasks: {
-              name: req.body.name,
-              assignee: new mongoose.mongo.ObjectId(req.body.assignee)
+              name: req.body.name
             }
           }
         },
@@ -253,7 +254,7 @@ const addTask = (req, res) => {
         .catch(err => {
           res.status(400).json({
             error: 'Bad Request',
-            message: 'User could not be added to task list'
+            message: 'Task could not be added to task list'
           });
         });
     });
@@ -284,7 +285,7 @@ const addTask = (req, res) => {
  *
  */
 const addUser = (req, res) => {
-  TaskListModel.findOne({ _id: new mongoose.mongo.ObjectId(req.params.id) })
+  TaskListModel.findById(req.params.id)
     .exec()
     .then(tasklist => {
       if (!(req.isAdmin === 'true' || req.userId == tasklist.author)) {
@@ -389,5 +390,6 @@ module.exports = {
   getById,
   create,
   deleteById,
-  addUser
+  addUser,
+  addTask,
 };

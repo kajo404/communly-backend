@@ -11,7 +11,7 @@ const TaskSchema = new mongoose.Schema({
   assignee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    require: false
+    required: false
   },
   isDone: { type: Boolean }
 });

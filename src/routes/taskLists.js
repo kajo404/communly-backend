@@ -19,6 +19,6 @@ router.post(
   middlewares.checkAuthentication,
   TaskListController.addUser
 );
-router.post('/:id/addTask');
+router.post('/:id/addTask', middlewares.checkAuthentication, TaskListController.addTask);
 
 module.exports = router;

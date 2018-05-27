@@ -28,9 +28,9 @@ const TaskModel = require('../models/task');
 const assignUser = (req, res) => {
   // todo check for task list member or admin
   TaskModel.findByIdAndUpdate(req.params.taskid, {
-    asignee: new mongoose.mongo.ObjectId(req.params.userid)
+    assignee: new mongoose.mongo.ObjectId(req.params.userid)
   })
-    .populate({ path: 'asignee', select: 'name' })
+    .populate({ path: 'assignee', select: 'name' })
     .exec()
     .then(result => {
       res.status(200).json(result);
