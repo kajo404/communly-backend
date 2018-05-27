@@ -26,6 +26,7 @@ const TaskModel = require('../models/task');
  *
  */
 const assignUser = (req, res) => {
+  // todo check for task list member or admin
   TaskModel.findByIdAndUpdate(req.params.taskid, {
     asignee: new mongoose.mongo.ObjectId(req.params.userid)
   })
