@@ -12,4 +12,10 @@ router.post(
   TasksController.assignUser
 );
 
+router.delete(
+  '/:taskid',
+  middlewares.checkAuthentication,
+  TasksController.deleteTask
+);
+
 module.exports = router;

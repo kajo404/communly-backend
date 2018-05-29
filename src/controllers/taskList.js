@@ -18,7 +18,17 @@ const mongoose = require('mongoose');
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "taskList": { title: 'some title', author: 'userID', ... TODO }
+          "taskList": {
+        "members": [],
+        "tasks": [],
+        "_id": "5b0d09a50986de06c7f7293d",
+        "author": {
+            "_id": "5afd440d8dfabd74b8297151",
+            "name": "Jon Doe"
+        },
+        "title": "1234",
+        "creationDate": "2018-05-29T08:04:53.863Z"
+    }
        }
  *
  * @apiError BadRequest The request body must contain a tasklist id.
@@ -95,6 +105,7 @@ const getById = (req, res) => {
        }
  */
 const getAll = (req, res) => {
+  //TODO access check
   TaskListModel.find({})
     .populate({
       path: 'members',
@@ -157,23 +168,9 @@ const create = (req, res) => {
   };
 
   TaskListModel.create(taskList)
-    .populate({
-      path: 'members',
-      select: 'name'
-    })
-    .populate({
-      path: 'author',
-      select: 'name'
-    })
-    .populate({
-      path: 'tasks',
-      select: ['name', 'assignee', 'isDone'],
-      populate: { path: 'assignee', select: 'name' }
-    })
-    .exec()
     .then(tasklist => {
       res.status(200).json({
-        tasklist
+        tasklist //can this return object be populated?
       });
     })
     .catch(err => {
@@ -185,11 +182,11 @@ const create = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists/:id/addTask Add a new task to a task list. Updates if task already exists
+ * @api {post} /tasklists/:id/addTasks Add an array of tasks to a task list. Updates if task already exists
  * @apiName AddTaskToTaskList
  * @apiGroup TaskList
  *
- * @apiParam {String} name Name of the new task.
+ * @apiParam {Task[]} tasks Array of tasks
  * @apiParam {String} [assignee] id of the user assigned to the task.
  *
  * @apiSuccess {Object} taskList the taskList object.
@@ -197,22 +194,37 @@ const create = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-        "members": [
-          "5afd440d8dfabd74b8297151",
-          "5afd440d8dfabd74b8297152",
-          "5b098c0e70d4c7235cf9a6a5"
-        ],
-        "_id": "5b098c0e70d4c7235cf9a6a6",
-        "author": "5afd440d8dfabd74b8297151",
-        "title": "test",
-        "creationDate": "2018-05-26T16:32:14.069Z"
+    "members": [
+        {
+            "_id": "5afd440d8dfabd74b8297151",
+            "name": "Jon Doe"
+        }
+    ],
+    "tasks": [
+        {
+            "_id": "5b0d4e66dd444525452990aa",
+            "name": "stuff to do"
+        },
+        {
+            "_id": "5b0d4e66dd444525452990ab",
+            "name": "special request for yasna"
+        }
+    ],
+    "_id": "5b098c0e70d4c7235cf9a6a6",
+    "author": {
+        "_id": "5afd440d8dfabd74b8297151",
+        "name": "Jon Doe"
+    },
+    "title": "test",
+    "creationDate": "2018-05-26T16:32:14.069Z"
 }
  *
  */
-const addTask = (req, res) => {
+const addTasks = (req, res) => {
   TaskListModel.findOne({ _id: new mongoose.mongo.ObjectId(req.params.id) })
     .exec()
     .then(tasklist => {
+      console.log(0);
       if (!(req.isAdmin || req.userId == tasklist.author)) {
         return res.status(403).json({
           error: 'Access Denied',
@@ -220,52 +232,63 @@ const addTask = (req, res) => {
             'Only admins or the author of the task list can add new members'
         });
       }
-      TaskListModel.findOneAndUpdate(
-        {
-          _id: new mongoose.mongo.ObjectId(req.params.id)
-        },
-        {
-          $push: {
-            tasks: {
-              name: req.body.name
-            }
-          }
-        },
-        { new: true },
-        { upsert: true }
-      )
-        .populate({
-          path: 'members',
-          select: 'name'
-        })
-        .populate({
-          path: 'author',
-          select: 'name'
-        })
-        .populate({
-          path: 'tasks',
-          select: ['name', 'assignee', 'isDone'],
-          populate: { path: assgnee, select: 'name' }
-        })
-        .exec()
-        .then(result => {
-          res.status(200).json(result);
+      console.log(1);
+      TaskModel.create(req.body.tasks)
+        .then(tasks => {
+          console.log(tasks);
+          // Append to the task board
+          TaskListModel.findByIdAndUpdate(
+            req.params.id,
+            { $addToSet: { tasks: { $each: tasks } } },
+            { new: true }
+          )
+            .populate({
+              path: 'members',
+              select: 'name'
+            })
+            .populate({
+              path: 'author',
+              select: 'name'
+            })
+            .populate({
+              path: 'tasks',
+              select: ['name', 'assignee', 'isDone'],
+              populate: { path: 'assignee', select: 'name' }
+            })
+            .exec()
+            .then(result => {
+              res.status(200).json(result);
+            })
+            .catch(err => {
+              res.status(400).json({
+                error: 'Bad Request',
+                message: 'Task could not be added to task list'
+              });
+            });
         })
         .catch(err => {
+          console.log(err);
           res.status(400).json({
             error: 'Bad Request',
             message: 'Task could not be added to task list'
           });
         });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Task could not be added to task list'
+      });
     });
 };
 
 /**
- * @api {post} /tasklists/:id/addMember Add a new member to a task list.
- * @apiName AddMemberToTaskList
+ * @api {post} /tasklists/:id/addMembers Add new members to a task list.
+ * @apiName AddMembersToTaskList
  * @apiGroup TaskList
  *
- * @apiParam {String} memberId The User to add to the task list.
+ * @apiParam {User} members Array of users to add to the task list.
  *
  * @apiSuccess {Object} taskList the taskList object.
  *
@@ -295,7 +318,7 @@ const addUser = (req, res) => {
             'Only admins or the author of the task list can add new members'
         });
       }
-      if (tasklist.members.indexOf(req.body.memberId) >= 0) {
+      if (false) {
         return res.status(400).json({
           error: 'Bad Request',
           message: 'User already member of the task list'
@@ -306,7 +329,7 @@ const addUser = (req, res) => {
             _id: new mongoose.mongo.ObjectId(req.params.id)
           },
           {
-            $push: { members: new mongoose.mongo.ObjectId(req.body.memberId) }
+            $addToSet: { members: { $each: req.body.members } }
           },
           { new: true }
         )
@@ -391,5 +414,5 @@ module.exports = {
   create,
   deleteById,
   addUser,
-  addTask,
+  addTasks
 };
