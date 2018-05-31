@@ -25,10 +25,4 @@ router.post(
   TaskListController.addTasks
 );
 
-// router.get(
-//   '/:id/tasks',
-//   middlewares.checkAuthentication,
-//   TaskListController.getAllTasks
-// );
-
 module.exports = router;
