@@ -56,8 +56,9 @@ const login = (req, res) => {
 
       // if user is found and password is valid
       // create a token
+      const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
-        { id: user._id, name: user.name },
+        { id: user._id, name: user.name, isAdmin: isAdmin },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
@@ -129,15 +130,14 @@ const register = (req, res) => {
     .then(user => {
       // if user is registered without errors
       // create a token
+      const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
-        { id: user._id, name: user.name },
+        { id: user._id, name: user.name, isAdmin: isAdmin },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
         }
       );
-      console.log(user);
-
       res.status(200).json({ token: token });
     })
     .catch(error => {
@@ -159,9 +159,8 @@ const register = (req, res) => {
  * @api {get} /auth/me Me
  * @apiName MeUser
  * @apiGroup User
- *
- * @apiParam {String} id Users id.
- * @apiHeader {String} x-access-token token provided by the login.
+ * 
+ * @apiHeader {String} Authorization Bearer <token>
  *
  * @apiSuccess {String} _id user id.
  * @apiSuccessExample Success-Response:

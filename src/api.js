@@ -12,7 +12,7 @@ const auth = require('./routes/auth');
 const announcements = require('./routes/announcements');
 const taskLists = require('./routes/taskLists');
 const tasks = require('./routes/tasks');
-
+const users = require('./routes/user');
 const api = express();
 
 // Adding Basic Middlewares
@@ -29,13 +29,9 @@ api.get('/', (req, res) => {
 
 // API routes
 api.use('/auth', auth);
-
 api.use('/announcements', announcements);
-
-// taskLists routes
 api.use('/tasklists', taskLists);
-
-// tasks routes
 api.use('/tasks', tasks);
+api.use('/users', users);
 
 module.exports = api;
