@@ -224,7 +224,6 @@ const addTasks = (req, res) => {
   TaskListModel.findOne({ _id: new mongoose.mongo.ObjectId(req.params.id) })
     .exec()
     .then(tasklist => {
-      console.log(0);
       if (!(req.isAdmin || req.userId == tasklist.author)) {
         return res.status(403).json({
           error: 'Access Denied',
@@ -232,10 +231,8 @@ const addTasks = (req, res) => {
             'Only admins or the author of the task list can add new members'
         });
       }
-      console.log(1);
       TaskModel.create(req.body.tasks)
         .then(tasks => {
-          console.log(tasks);
           // Append to the task board
           TaskListModel.findByIdAndUpdate(
             req.params.id,
