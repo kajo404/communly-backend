@@ -140,7 +140,6 @@ const getAll = (req, res) => {
  * @apiGroup TaskList
  *
  * @apiParam {String} title The title of the task list.
- * @apiParam {String[]} [members] Users that can access this task list
  *
  * @apiSuccess {Object} taskList the taskList object.
  *
@@ -163,8 +162,6 @@ const create = (req, res) => {
   const taskList = {
     author: req.userId,
     title: req.body.title
-    // members: req.body.members,
-    // tasks: req.body.tasks
   };
 
   TaskListModel.create(taskList)
@@ -200,7 +197,7 @@ const create = (req, res) => {
             "name": "Jon Doe"
         }
     ],
-    "tasks": [
+    "task":
         {
             "_id": "5b0d4e66dd444525452990aa",
             "name": "stuff to do"
