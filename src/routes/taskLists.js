@@ -15,12 +15,12 @@ router.delete(
   TaskListController.deleteById
 );
 router.post(
-  '/:id/addMembers',
+  '/:id/members',
   middlewares.checkAuthentication,
   TaskListController.addUser
 );
 router.post(
-  '/:id/addTasks',
+  '/:id/tasks',
   middlewares.checkAuthentication,
   TaskListController.addTasks
 );

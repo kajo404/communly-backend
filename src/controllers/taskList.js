@@ -182,7 +182,7 @@ const create = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists/:id/addTasks Add an array of tasks to a task list. Updates if task already exists
+ * @api {post} /tasklists/:id/tasks Add an array of tasks to a task list. Updates if task already exists
  * @apiName AddTaskToTaskList
  * @apiGroup TaskList
  *
@@ -284,7 +284,7 @@ const addTasks = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists/:id/addMembers Add new members to a task list.
+ * @api {post} /tasklists/:id/members Add new members to a task list.
  * @apiName AddMembersToTaskList
  * @apiGroup TaskList
  *
@@ -318,45 +318,38 @@ const addUser = (req, res) => {
             'Only admins or the author of the task list can add new members'
         });
       }
-      if (false) {
-        return res.status(400).json({
-          error: 'Bad Request',
-          message: 'User already member of the task list'
-        });
-      } else {
-        TaskListModel.findOneAndUpdate(
-          {
-            _id: new mongoose.mongo.ObjectId(req.params.id)
-          },
-          {
-            $addToSet: { members: { $each: req.body.members } }
-          },
-          { new: true }
-        )
-          .populate({
-            path: 'members',
-            select: 'name'
-          })
-          .populate({
-            path: 'author',
-            select: 'name'
-          })
-          .populate({
-            path: 'tasks',
-            select: ['name', 'assignee', 'isDone'],
-            populate: { path: 'assignee', select: 'name' }
-          })
-          .exec()
-          .then(result => {
-            res.status(200).json(result);
-          })
-          .catch(err => {
-            res.status(400).json({
-              error: 'Bad Request',
-              message: 'User could not be added to task list'
-            });
+      TaskListModel.findOneAndUpdate(
+        {
+          _id: new mongoose.mongo.ObjectId(req.params.id)
+        },
+        {
+          $addToSet: { members: { $each: req.body.members } }
+        },
+        { new: true }
+      )
+        .populate({
+          path: 'members',
+          select: 'name'
+        })
+        .populate({
+          path: 'author',
+          select: 'name'
+        })
+        .populate({
+          path: 'tasks',
+          select: ['name', 'assignee', 'isDone'],
+          populate: { path: 'assignee', select: 'name' }
+        })
+        .exec()
+        .then(result => {
+          res.status(200).json(result);
+        })
+        .catch(err => {
+          res.status(400).json({
+            error: 'Bad Request',
+            message: 'User could not be added to task list'
           });
-      }
+        });
     });
 };
 /**

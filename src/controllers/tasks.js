@@ -6,7 +6,7 @@ const TaskListModel = require('../models/taskList');
 const mongoose = require('mongoose');
 
 /**
- * @api {post} /tasks/:taskid/assignUser/:userid Assign a member.
+ * @api {post} /tasks/:taskid/assign/:userid Assign a member.
  * @apiName AssignMemberToTask
  * @apiGroup Tasks
  *

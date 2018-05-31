@@ -133,7 +133,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/tasklists/:id/addMembers",
+    "url": "/tasklists/:id/members",
     "title": "Add new members to a task list.",
     "name": "AddMembersToTaskList",
     "group": "TaskList",
@@ -176,7 +176,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/tasklists/:id/addTasks",
+    "url": "/tasklists/:id/tasks",
     "title": "Add an array of tasks to a task list. Updates if task already exists",
     "name": "AddTaskToTaskList",
     "group": "TaskList",
@@ -436,7 +436,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/tasks/:taskid/assignUser/:userid",
+    "url": "/tasks/:taskid/assign/:userid",
     "title": "Assign a member.",
     "name": "AssignMemberToTask",
     "group": "Tasks",
