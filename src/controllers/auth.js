@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 
 const config = require('../config');
 const UserModel = require('../models/user');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * @api {post} /auth/login Login
@@ -121,9 +123,19 @@ const register = (req, res) => {
       message: 'The request body must contain a email property'
     });
 
-  const user = Object.assign(req.body, {
-    password: bcrypt.hashSync(req.body.password, 8)
-  });
+  var imgData = fs.readFileSync(path.resolve('src/assets/avatar.png'));
+  var imgContentType = 'image/png';
+
+  const user = {
+    name: req.body.name,
+    password: bcrypt.hashSync(req.body.password, 8),
+    dateOfBirth: req.body.dateOfBirth,
+    email: req.body.email,
+    image: {
+      data: imgData,
+      contentType: imgContentType
+    }
+  };
 
   UserModel.create(user)
     .then(user => {
@@ -136,7 +148,6 @@ const register = (req, res) => {
           expiresIn: 86400 // expires in 24 hours
         }
       );
-      console.log(user);
 
       res.status(200).json({ token: token });
     })
@@ -144,6 +155,11 @@ const register = (req, res) => {
       if (error.code == 11000) {
         res.status(400).json({
           error: 'User exists',
+          message: error.message
+        });
+      } else if (error.name == 'ValidationError') {
+        res.status(500).json({
+          error: 'ValidationError (Email)',
           message: error.message
         });
       } else {
@@ -216,9 +232,45 @@ const logout = (req, res) => {
   res.status(200).send({ token: null });
 };
 
+/**
+ * @api {post} /auth/changeUserPicture update profile image
+ * @apiName change user picture
+ * @apiGroup User
+ *
+ * @apiParam {file} new image.
+ *
+ * @apiSuccess {String} token Access token for the User.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZmM0N2YxMjM0ZDcyNGJjNGM5MGI0NCIsImlhdCI6MTUyNjU0NzU0MywiZXhwIjoxNTI2NjMzOTQzfQ.dKr6_xu8PMnBtd09Iu8Sp6dAQoYLW258AhJzbeHMx8M"
+       }
+ *
+ * @apiError BadRequest The request body must contain a password/email property.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a image property"
+       }
+ */
+const changeUserPicture = (req, res) => {
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'imageData'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a image property'
+    });
+
+  console.log(req.body.imageData);
+  console.log(req.body.imageType);
+};
+
 module.exports = {
   login,
   register,
+  changeUserPicture,
   logout,
   me
 };
