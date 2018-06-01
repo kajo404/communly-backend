@@ -140,7 +140,6 @@ const getAll = (req, res) => {
  * @apiGroup TaskList
  *
  * @apiParam {String} title The title of the task list.
- * @apiParam {String[]} [members] Users that can access this task list
  *
  * @apiSuccess {Object} taskList the taskList object.
  *
@@ -162,9 +161,7 @@ const getAll = (req, res) => {
 const create = (req, res) => {
   const taskList = {
     author: req.userId,
-    title: req.body.title,
-    members: req.body.members,
-    tasks: req.body.tasks
+    title: req.body.title
   };
 
   TaskListModel.create(taskList)
@@ -200,7 +197,7 @@ const create = (req, res) => {
             "name": "Jon Doe"
         }
     ],
-    "tasks": [
+    "task":
         {
             "_id": "5b0d4e66dd444525452990aa",
             "name": "stuff to do"
@@ -221,7 +218,7 @@ const create = (req, res) => {
  *
  */
 const addTasks = (req, res) => {
-  TaskListModel.findOne({ _id: new mongoose.mongo.ObjectId(req.params.id) })
+  TaskListModel.findById(req.params.id)
     .exec()
     .then(tasklist => {
       if (!(req.isAdmin || req.userId == tasklist.author)) {
@@ -231,14 +228,13 @@ const addTasks = (req, res) => {
             'Only admins or the author of the task list can add new members'
         });
       }
-      TaskModel.create(req.body.tasks)
-        .then(tasks => {
+
+      TaskModel.create(req.body.task)
+        .then(task => {
           // Append to the task board
-          TaskListModel.findByIdAndUpdate(
-            req.params.id,
-            { $addToSet: { tasks: { $each: tasks } } },
-            { new: true }
-          )
+          TaskListModel.findByIdAndUpdate(req.params.id, {
+            $push: { tasks: task._id }
+          })
             .populate({
               path: 'members',
               select: 'name'
@@ -315,13 +311,9 @@ const addUser = (req, res) => {
             'Only admins or the author of the task list can add new members'
         });
       }
-      TaskListModel.findOneAndUpdate(
-        {
-          _id: new mongoose.mongo.ObjectId(req.params.id)
-        },
-        {
-          $addToSet: { members: { $each: req.body.members } }
-        },
+      TaskListModel.findByIdAndUpdate(
+        req.params.id,
+        { $set: { members: req.body.members } },
         { new: true }
       )
         .populate({
@@ -366,13 +358,11 @@ const addUser = (req, res) => {
  *
  */
 const deleteById = (req, res) => {
-  TaskListModel.findOne({ _id: new mongoose.mongo.ObjectId(req.params.id) })
+  TaskListModel.findById(req.params.id)
     .exec()
     .then(tasklist => {
       if (req.isAdmin === 'true' || tasklist.author == req.userId) {
-        TaskListModel.remove({
-          _id: new mongoose.mongo.ObjectId(req.params.id)
-        })
+        TaskListModel.findByIdAndRemove(req.params.id)
           .exec()
           .then(removed => {
             res.status(200).json({ removed });
