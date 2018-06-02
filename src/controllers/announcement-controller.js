@@ -64,6 +64,54 @@ const getAll = (req, res) => {
 };
 
 /**
+ * @api {get} /getAnnoncementsForUser Get all Announcements for user
+ * @apiName GetAnnoncementsForUser
+ * @apiGroup Announcements
+ *
+ *
+ * @apiSuccess {Array} announcements Array of announcement objects.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "announcements": 
+          [ 
+              {
+                title: 'Hello World',
+                content: 'abcde',
+                author: 'Lara Marie Reimer',
+                creationDate: '19/05/2018',
+                isVotable: false,
+                upvotes: [],
+                downvotes: []
+            }
+          ]
+       }
+ *
+ * @apiError BadRequest Generic error. Could not get announcements.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Generic error. Could not get announcements."
+       }
+ */
+const getAnnoncementsForUser = (req, res) => {
+  AnnouncementModel.find({ author: req.userId })
+    .exec()
+    .then(announcements => {
+      res.status(200).json({ announcements });
+    })
+    .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Generic error. Could not get announcements.'
+      });
+    });
+};
+
+/**
  * @api {post} / Create a new Announcement
  * @apiName CreateNewAnnouncement
  * @apiGroup Announcements
@@ -132,5 +180,6 @@ const create = (req, res) => {
 
 module.exports = {
   getAll,
+  getAnnoncementsForUser,
   create
 };

@@ -124,17 +124,17 @@ const register = (req, res) => {
     });
 
   var imgData = fs.readFileSync(path.resolve('src/assets/avatar.png'));
+  var stringData = Buffer.from(imgData).toString('base64');
   var imgContentType = 'image/png';
+
+  var imageString = 'data:' + imgContentType + ';base64,' + stringData;
 
   const user = {
     name: req.body.name,
     password: bcrypt.hashSync(req.body.password, 8),
     dateOfBirth: req.body.dateOfBirth,
     email: req.body.email,
-    image: {
-      data: imgData,
-      contentType: imgContentType
-    }
+    image: imageString
   };
 
   UserModel.create(user)
@@ -263,8 +263,25 @@ const changeUserPicture = (req, res) => {
       message: 'The request body must contain a image property'
     });
 
-  console.log(req.body.imageData);
-  console.log(req.body.imageType);
+  var update = { image: req.body.imageData };
+
+  UserModel.findByIdAndUpdate(req.userId, update)
+    .exec()
+    .then(user => {
+      if (!user)
+        return res.status(404).json({
+          error: 'Not Found',
+          message: `User not found`
+        });
+
+      res.status(200).json(user);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: error.message
+      })
+    );
 };
 
 module.exports = {
