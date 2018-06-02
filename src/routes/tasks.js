@@ -6,8 +6,6 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const TasksController = require('../controllers/tasks');
 
-
-router.post('/', middlewares.checkAuthentication, TasksController.create);
 router.get(
   '/byId/:id',
   middlewares.checkAuthentication,
@@ -25,7 +23,6 @@ router.post(
   middlewares.checkAuthentication,
   TasksController.assignUser
 );
-
 
 router.delete(
   '/:taskid',

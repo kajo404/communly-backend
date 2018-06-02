@@ -124,7 +124,7 @@ const getAllAsignedTasksForUser = (req, res) => {
     });
 };
 
-
+/**
  * @api {delete} /tasks/:taskid Deletes Task.
  * @apiName DeleteTask
  * @apiGroup Tasks
@@ -184,8 +184,6 @@ const deleteTask = (req, res) => {
 };
 
 module.exports = {
-  create,
-  update,
   getAll,
   getAllAsignedTasksForUser,
   assignUser,
