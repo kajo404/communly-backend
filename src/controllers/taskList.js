@@ -105,8 +105,8 @@ const getById = (req, res) => {
        }
  */
 const getAll = (req, res) => {
-  //TODO access check
-  TaskListModel.find({})
+  // send only the boards that the user is a member of
+  TaskListModel.find({ members: req.userId })
     .populate({
       path: 'members',
       select: 'name'
@@ -161,7 +161,8 @@ const getAll = (req, res) => {
 const create = (req, res) => {
   const taskList = {
     author: req.userId,
-    title: req.body.title
+    title: req.body.title,
+    members: [req.userId]
   };
 
   TaskListModel.create(taskList)
