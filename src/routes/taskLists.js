@@ -28,5 +28,15 @@ router.delete(
   middlewares.checkAuthentication,
   TaskListController.deleteById
 );
+router.post(
+  '/:id/members',
+  middlewares.checkAuthentication,
+  TaskListController.addUser
+);
+router.post(
+  '/:id/tasks',
+  middlewares.checkAuthentication,
+  TaskListController.addTasks
+);
 
 module.exports = router;
