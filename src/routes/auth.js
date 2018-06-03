@@ -9,7 +9,7 @@ const AuthController = require('../controllers/auth');
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
 router.post(
-  '/changeUserPicture',
+  '/userPicture',
   middlewares.checkAuthentication,
   AuthController.changeUserPicture
 );

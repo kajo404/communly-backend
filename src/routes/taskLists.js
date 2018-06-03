@@ -13,12 +13,12 @@ router.get(
   TaskListController.getById
 );
 router.get(
-  '/getTasklistsForUserAsAuthor',
+  '/tasklistsForUserAsAuthor',
   middlewares.checkAuthentication,
   TaskListController.getTasklistsForUserAsAuthor
 );
 router.get(
-  '/getTasklistsForUserAsMemeber',
+  '/tasklistsForUserAsMemeber',
   middlewares.checkAuthentication,
   TaskListController.getTasklistsForUserAsMemeber
 );
