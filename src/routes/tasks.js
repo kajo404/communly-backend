@@ -13,7 +13,7 @@ router.get(
 );
 
 router.get(
-  '/allAsignedTasksForUser',
+  '/user/asignedTasks',
   middlewares.checkAuthentication,
   TasksController.getAllAsignedTasksForUser
 );

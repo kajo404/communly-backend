@@ -17,7 +17,7 @@ router.get(
   AnnouncementsController.getAll
 );
 router.get(
-  '/annoncementsForUser',
+  '/user/annoncements',
   middlewares.checkAuthentication,
   AnnouncementsController.getAnnoncementsForUser
 );
