@@ -60,7 +60,10 @@ const getById = (req, res) => {
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
-      populate: { path: 'assignee', select: 'name' }
+      populate: {
+        path: 'assignee',
+        select: 'name'
+      }
     })
     .exec()
     .then(taskList => {
@@ -105,8 +108,10 @@ const getById = (req, res) => {
        }
  */
 const getAll = (req, res) => {
-  //TODO access check
-  TaskListModel.find({})
+  // send only the boards that the user is a member of
+  TaskListModel.find({
+    members: req.userId
+  })
     .populate({
       path: 'members',
       select: 'name'
@@ -118,7 +123,10 @@ const getAll = (req, res) => {
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
-      populate: { path: 'assignee', select: 'name' }
+      populate: {
+        path: 'assignee',
+        select: 'name'
+      }
     })
     .exec()
     .then(tasklists => {
@@ -311,11 +319,13 @@ const addTasks = (req, res) => {
   TaskListModel.findById(req.params.id)
     .exec()
     .then(tasklist => {
-      if (!(req.isAdmin || req.userId == tasklist.author)) {
+      const memberIds = tasklist.members.map(member => member.toString());
+
+      if (!(req.isAdmin === 'true' || memberIds.includes(req.userId))) {
         return res.status(403).json({
           error: 'Access Denied',
           message:
-            'Only admins or the author of the task list can add new members'
+            'Only admins or a member of the task list can add new members'
         });
       }
 
@@ -323,7 +333,9 @@ const addTasks = (req, res) => {
         .then(task => {
           // Append to the task board
           TaskListModel.findByIdAndUpdate(req.params.id, {
-            $push: { tasks: task._id }
+            $push: {
+              tasks: task._id
+            }
           })
             .populate({
               path: 'members',
@@ -336,7 +348,10 @@ const addTasks = (req, res) => {
             .populate({
               path: 'tasks',
               select: ['name', 'assignee', 'isDone'],
-              populate: { path: 'assignee', select: 'name' }
+              populate: {
+                path: 'assignee',
+                select: 'name'
+              }
             })
             .exec()
             .then(result => {
@@ -403,8 +418,14 @@ const addUser = (req, res) => {
       }
       TaskListModel.findByIdAndUpdate(
         req.params.id,
-        { $set: { members: req.body.members } },
-        { new: true }
+        {
+          $set: {
+            members: req.body.members
+          }
+        },
+        {
+          new: true
+        }
       )
         .populate({
           path: 'members',
@@ -417,7 +438,10 @@ const addUser = (req, res) => {
         .populate({
           path: 'tasks',
           select: ['name', 'assignee', 'isDone'],
-          populate: { path: 'assignee', select: 'name' }
+          populate: {
+            path: 'assignee',
+            select: 'name'
+          }
         })
         .exec()
         .then(result => {
@@ -455,7 +479,9 @@ const deleteById = (req, res) => {
         TaskListModel.findByIdAndRemove(req.params.id)
           .exec()
           .then(removed => {
-            res.status(200).json({ removed });
+            res.status(200).json({
+              removed
+            });
           });
       } else {
         res.status(403).json({
