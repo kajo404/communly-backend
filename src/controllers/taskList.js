@@ -67,7 +67,6 @@ const getById = (req, res) => {
     })
     .exec()
     .then(taskList => {
-      console.log(taskList);
       res.status(200).json({
         taskList
       });
@@ -417,6 +416,37 @@ const deleteById = (req, res) => {
       });
     });
 };
+
+/**
+ * @api {post} /tasklists/:id/title create a new TaskList
+ * @apiName UpdateTaskBoardTitle
+ * @apiGroup TaskList
+ *
+ * @apiParam {String} title The new title of the task list.
+ *
+ * @apiSuccess {Object} taskList the taskList object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     { members: [ 5b0ad5cfbe7b708aed9e4200, 5b0c0bc6cc1bf2d03597743d ],
+          tasks:
+          [ 5b181d8bba5358d762dec997,
+            5b181d93ba5358d762dec998,
+            5b181d95ba5358d762dec999 ],
+          _id: 5b1819663965d9d38d6336f3,
+          author: 5b0ad5cfbe7b708aed9e4200,
+          title: 'New title',
+          creationDate: 2018-06-06T17:27:02.067Z }
+ *
+ * @apiError BadRequest The request body must contain an author and a title.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Could not update Task List Title. The request body must contain the new title"
+       }
+ */
 
 const updateTitle = (req, res) => {
   TaskListModel.findById(req.params.id)
