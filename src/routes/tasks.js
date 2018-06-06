@@ -24,4 +24,10 @@ router.delete(
   TasksController.deleteTask
 );
 
+router.put(
+  '/:taskid',
+  middlewares.checkAuthentication,
+  TasksController.changeStatus
+);
+
 module.exports = router;

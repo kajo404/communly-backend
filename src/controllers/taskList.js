@@ -67,6 +67,7 @@ const getById = (req, res) => {
     })
     .exec()
     .then(taskList => {
+      console.log(taskList);
       res.status(200).json({
         taskList
       });
@@ -417,11 +418,41 @@ const deleteById = (req, res) => {
     });
 };
 
+const updateTitle = (req, res) => {
+  TaskListModel.findById(req.params.id)
+    .exec()
+    .then(tasklist => {
+      if (req.isAdmin === 'true' || tasklist.author == req.userId) {
+        TaskListModel.findByIdAndUpdate(req.params.id, {
+          title: req.body.title
+        })
+          .exec()
+          .then(result => {
+            res.status(200).json({
+              result
+            });
+          });
+      } else {
+        res.status(403).json({
+          error: 'Not Allowed',
+          message: 'User is not allowed to change board title'
+        });
+      }
+    })
+    .catch(err => {
+      res.status(404).json({
+        error: 'Not Found',
+        message: 'Task List could not be found'
+      });
+    });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   deleteById,
   addUser,
-  addTasks
+  addTasks,
+  updateTitle
 };

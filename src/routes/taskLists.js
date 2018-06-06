@@ -28,5 +28,10 @@ router.post(
   middlewares.checkAuthentication,
   TaskListController.addTasks
 );
+router.post(
+  '/:id/title',
+  middlewares.checkAuthentication,
+  TaskListController.updateTitle
+);
 
 module.exports = router;
