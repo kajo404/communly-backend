@@ -16,10 +16,5 @@ router.get(
   middlewares.checkAuthentication,
   AnnouncementsController.getAll
 );
-router.get(
-  '/user/annoncements',
-  middlewares.checkAuthentication,
-  AnnouncementsController.getAnnoncementsForUser
-);
 
 module.exports = router;

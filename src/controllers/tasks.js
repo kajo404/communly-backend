@@ -83,48 +83,6 @@ const getAll = (req, res) => {
 };
 
 /**
- * @api {get} /getAllAsignedTasksForUser Get assigned tasks for user
- * @apiName GetAllAsignedTasksForUser
- * @apiGroup Task
- *
- *
- * @apiSuccess {Array} tasks Array of Task objects.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
-          "tasks": [{ _id: 5b05a7dedc43694c58fffe01,
-                        name: 'dsfs',
-                        taskList: 5b05a7cedc43694c58fffdfa }]
-       }
- *
- * @apiError BadRequest Generic error. Could not get tasks.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     {
-          "error": "Bad Request",
-          "message": "Generic error. Could not get tasks."
-       }
- */
-
-const getAllAsignedTasksForUser = (req, res) => {
-  TaskModel.find({ assignee: req.userId })
-    .exec()
-    .then(tasks => {
-      res.status(200).json({
-        tasks
-      });
-    })
-    .catch(err => {
-      res.status(400).json({
-        error: 'Bad Request',
-        message: 'Generic error. Could not get tasks.'
-      });
-    });
-};
-
-/**
  * @api {delete} /tasks/:taskid Deletes Task.
  * @apiName DeleteTask
  * @apiGroup Tasks
@@ -185,7 +143,6 @@ const deleteTask = (req, res) => {
 
 module.exports = {
   getAll,
-  getAllAsignedTasksForUser,
   assignUser,
   deleteTask
 };

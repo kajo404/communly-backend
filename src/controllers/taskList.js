@@ -143,95 +143,6 @@ const getAll = (req, res) => {
 };
 
 /**
-
- * @api {get} /getTasklistsForUserAsAuthor Get TaskLists for user as author
- * @apiName GetTasklistsForUserAsAuthor
- * @apiGroup TaskList
- *
- *
- * @apiSuccess {Array} taskLists Array of taskList objects.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
-          "taskLists": [ {
-                            members: [],
-                            _id: 5b057b36dc43694c58fffdef,
-                            title: 'Dinner Grocery List',
-                            creationDate: 2018-05-23T14:31:18.061Z }
-        ]
-       }
- *
- * @apiError BadRequest Generic error. Could not get task lists.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     {
-          "error": "Bad Request",
-          "message": "Generic error. Could not get task lists."
-       }
- */
-const getTasklistsForUserAsAuthor = (req, res) => {
-  TaskListModel.find({ author: req.userId })
-    .exec()
-    .then(tasklists => {
-      res.status(200).json({
-        tasklists
-      });
-    })
-    .catch(err => {
-      res.status(400).json({
-        error: 'Bad Request',
-        message: 'Generic error. Could not get task lists.'
-      });
-    });
-};
-
-/**
- * @api {get} /getTasklistsForUserAsMemeber Get TaskLists for user as memeber
- * @apiName GetTasklistsForUserAsMemeber
- * @apiGroup TaskList
- *
- *
- * @apiSuccess {Array} taskLists Array of taskList objects.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
-          "taskLists": [ {
-                            members: [],
-                            _id: 5b057b36dc43694c58fffdef,
-                            title: 'Dinner Grocery List',
-                            creationDate: 2018-05-23T14:31:18.061Z }
-        ]
-       }
- *
- * @apiError BadRequest Generic error. Could not get task lists.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     {
-          "error": "Bad Request",
-          "message": "Generic error. Could not get task lists."
-       }
- */
-const getTasklistsForUserAsMemeber = (req, res) => {
-  TaskListModel.find({ members: req.userId })
-    .exec()
-    .then(tasklists => {
-      res.status(200).json({
-        tasklists
-      });
-    })
-    .catch(err => {
-      res.status(400).json({
-        error: 'Bad Request',
-        message: 'Generic error. Could not get task lists.'
-      });
-    });
-};
-
-/**
  * @api {post} /tasklists create a new TaskList
  * @apiName CreateNewTaskList
  * @apiGroup TaskList
@@ -507,8 +418,6 @@ const deleteById = (req, res) => {
 module.exports = {
   getAll,
   getById,
-  getTasklistsForUserAsAuthor,
-  getTasklistsForUserAsMemeber,
   create,
   deleteById,
   addUser,

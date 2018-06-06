@@ -232,62 +232,9 @@ const logout = (req, res) => {
   res.status(200).send({ token: null });
 };
 
-/**
- * @api {post} /auth/changeUserPicture update profile image
- * @apiName change user picture
- * @apiGroup User
- *
- * @apiParam {file} new image.
- *
- * @apiSuccess {String} token Access token for the User.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
-          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZmM0N2YxMjM0ZDcyNGJjNGM5MGI0NCIsImlhdCI6MTUyNjU0NzU0MywiZXhwIjoxNTI2NjMzOTQzfQ.dKr6_xu8PMnBtd09Iu8Sp6dAQoYLW258AhJzbeHMx8M"
-       }
- *
- * @apiError BadRequest The request body must contain a password/email property.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     {
-          "error": "Bad Request",
-          "message": "The request body must contain a image property"
-       }
- */
-const changeUserPicture = (req, res) => {
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'imageData'))
-    return res.status(400).json({
-      error: 'Bad Request',
-      message: 'The request body must contain a image property'
-    });
-
-  var update = { image: req.body.imageData };
-
-  UserModel.findByIdAndUpdate(req.userId, update)
-    .exec()
-    .then(user => {
-      if (!user)
-        return res.status(404).json({
-          error: 'Not Found',
-          message: `User not found`
-        });
-
-      res.status(200).json(user);
-    })
-    .catch(error =>
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: error.message
-      })
-    );
-};
-
 module.exports = {
   login,
   register,
-  changeUserPicture,
   logout,
   me
 };

@@ -12,12 +12,6 @@ router.get(
   TasksController.getAll
 );
 
-router.get(
-  '/user/asignedTasks',
-  middlewares.checkAuthentication,
-  TasksController.getAllAsignedTasksForUser
-);
-
 router.post(
   '/:taskid/assign/:userid',
   middlewares.checkAuthentication,

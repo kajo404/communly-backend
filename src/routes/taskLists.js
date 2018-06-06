@@ -12,16 +12,6 @@ router.get(
   middlewares.checkAuthentication,
   TaskListController.getById
 );
-router.get(
-  '/author/tasklists',
-  middlewares.checkAuthentication,
-  TaskListController.getTasklistsForUserAsAuthor
-);
-router.get(
-  '/member/tasklists',
-  middlewares.checkAuthentication,
-  TaskListController.getTasklistsForUserAsMemeber
-);
 router.post('/', middlewares.checkAuthentication, TaskListController.create);
 router.delete(
   '/:id',
