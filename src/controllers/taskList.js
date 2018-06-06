@@ -276,7 +276,7 @@ const addTasks = (req, res) => {
             });
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
           res.status(400).json({
             error: 'Bad Request',
             message: 'Task could not be added to task list'
@@ -284,7 +284,7 @@ const addTasks = (req, res) => {
         });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       res.status(400).json({
         error: 'Bad Request',
         message: 'Task could not be added to task list'
@@ -402,12 +402,14 @@ const deleteById = (req, res) => {
       }
     })
     .catch(err => {
+      console.error(err);
       res.status(404).json({
         error: 'Not Found',
         message: 'Task List could not be found'
       });
     })
     .catch(err => {
+      console.error(err);
       res.status(400).json({
         error: 'Bad Request',
         message: 'User does not exist'
