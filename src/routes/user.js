@@ -29,7 +29,7 @@ router.get(
 );
 
 router.post(
-  '/changePicture',
+  '/picture',
   middlewares.checkAuthentication,
   UsersController.changePicture
 );

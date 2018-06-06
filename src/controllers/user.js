@@ -23,7 +23,7 @@ const getAll = (req, res) => {
 };
 
 /**
- * @api {get} /getAnnoncements Get all Announcements for user
+ * @api {get} /annoncements Get all Announcements for user
  * @apiName GetAnnoncements
  * @apiGroup Announcements
  *
@@ -72,7 +72,7 @@ const getAnnoncements = (req, res) => {
 
 /**
 
- * @api {get} /getTasklistsAsAuthor Get TaskLists for user as author
+ * @api {get} /tasklists/author Get TaskLists for user as author
  * @apiName GetTasklistsAsAuthor
  * @apiGroup TaskList
  *
@@ -116,7 +116,7 @@ const getTasklistsAsAuthor = (req, res) => {
 };
 
 /**
- * @api {get} /getTasklistsAsMemeber Get TaskLists for user as memeber
+ * @api {get} /tasklists/member Get TaskLists for user as memeber
  * @apiName GetTasklistsAsMemeber
  * @apiGroup TaskList
  *
@@ -160,7 +160,7 @@ const getTasklistsAsMemeber = (req, res) => {
 };
 
 /**
- * @api {post} /changePicture update profile image
+ * @api {post} /picture update profile image
  * @apiName change user picture
  * @apiGroup User
  *
@@ -212,7 +212,7 @@ const changePicture = (req, res) => {
 };
 
 /**
- * @api {get} /getAsignedTasks for user
+ * @api {get} /tasks for user
  * @apiName getAsignedTasks
  * @apiGroup Task
  *
