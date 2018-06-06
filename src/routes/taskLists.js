@@ -28,7 +28,7 @@ router.post(
   middlewares.checkAuthentication,
   TaskListController.addTasks
 );
-router.post(
+router.put(
   '/:id/title',
   middlewares.checkAuthentication,
   TaskListController.updateTitle

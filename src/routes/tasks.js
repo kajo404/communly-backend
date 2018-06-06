@@ -25,7 +25,7 @@ router.delete(
 );
 
 router.put(
-  '/:taskid',
+  '/:taskid/status',
   middlewares.checkAuthentication,
   TasksController.changeStatus
 );
