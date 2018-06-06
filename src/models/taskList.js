@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const Task = require('./task');
 
 // Define the TaskList schema
 const TaskListSchema = new mongoose.Schema({
@@ -15,6 +16,11 @@ const TaskListSchema = new mongoose.Schema({
 });
 
 TaskListSchema.set('versionKey', false);
+
+TaskListSchema.post('findOneAndRemove', function(doc, next) {
+  Task.remove({ _id: { $in: doc.tasks } }).exec();
+  next();
+});
 
 // Export the TaskList model
 module.exports = mongoose.model('TaskList', TaskListSchema);

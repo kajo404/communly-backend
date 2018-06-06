@@ -99,45 +99,60 @@ const getAll = (req, res) => {
  *
  */
 const deleteTask = (req, res) => {
-  TaskListModel.findOneAndUpdate(
-    { tasks: { $in: [req.params.taskid] } },
-    {
-      $pull: { tasks: req.params.taskid }
-    }
-  )
+  //find corresponding task list
+  TaskListModel.findOne({
+    tasks: { $in: [req.params.taskid] }
+  })
     .exec()
     .then(taskList => {
-      TaskModel.findById(req.params.taskid)
+      //permission check
+      if (
+        !(
+          taskList.author == req.userId ||
+          req.isAdmin == 'true' ||
+          taskList.members.indexOf(req.userId) >= 0
+        )
+      ) {
+        return res.status(403).json({
+          error: 'Not Allowed',
+          message: 'Not allowed to access ressource'
+        });
+      }
+      //remove task from tasklist
+      TaskListModel.findOneAndUpdate(
+        { tasks: { $in: [req.params.taskid] } },
+        {
+          $pull: { tasks: req.params.taskid }
+        }
+      )
         .exec()
-        .then(result => {
-          if (taskList.author == req.userId || req.isAdmin == 'true') {
-            TaskModel.findByIdAndRemove(req.params.taskid)
-              .exec()
-              .then(result => {
-                res.status(200).json(result);
-              })
-              .catch(err => {
-                res.status(400).json({
-                  error: 'Bad Request',
-                  message: 'Task could not be deleted'
-                });
+        .then(taskList => {
+          //remove task from db
+          TaskModel.findByIdAndRemove(req.params.taskid)
+            .exec()
+            .then(result => {
+              res.status(200).json(result);
+            })
+            .catch(err => {
+              res.status(400).json({
+                error: 'Bad Request',
+                message:
+                  'Task could not be deleted but was removed from TaskList'
               });
-          } else {
-            res.status(403).json({
-              error: 'Not Allowed',
-              message: 'Not allowed to access ressource'
             });
-          }
         })
         .catch(err => {
           res.status(400).json({
             error: 'Bad Request',
-            message: 'Tasklist could not be found'
+            message: 'Task could not be removed from TaskList'
           });
         });
     })
     .catch(err => {
-      console.log(err);
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'TaskList could not be found'
+      });
     });
 };
 
