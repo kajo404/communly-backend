@@ -7,11 +7,7 @@ const middlewares = require('../middlewares');
 const TaskListController = require('../controllers/taskList');
 
 router.get('/', middlewares.checkAuthentication, TaskListController.getAll);
-router.get(
-  '/byId/:id',
-  middlewares.checkAuthentication,
-  TaskListController.getById
-);
+router.get('/:id', middlewares.checkAuthentication, TaskListController.getById);
 router.post('/', middlewares.checkAuthentication, TaskListController.create);
 router.delete(
   '/:id',
