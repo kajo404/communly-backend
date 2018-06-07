@@ -6,6 +6,12 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const TasksController = require('../controllers/tasks');
 
+router.get(
+  '/byId/:id',
+  middlewares.checkAuthentication,
+  TasksController.getAll
+);
+
 router.post(
   '/:taskid/assign/:userid',
   middlewares.checkAuthentication,

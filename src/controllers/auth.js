@@ -5,6 +5,8 @@ const bcrypt = require('bcryptjs');
 
 const config = require('../config');
 const UserModel = require('../models/user');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * @api {post} /auth/login Login
@@ -122,9 +124,19 @@ const register = (req, res) => {
       message: 'The request body must contain a email property'
     });
 
-  const user = Object.assign(req.body, {
-    password: bcrypt.hashSync(req.body.password, 8)
-  });
+  var imgData = fs.readFileSync(path.resolve('src/assets/avatar.png'));
+  var stringData = Buffer.from(imgData).toString('base64');
+  var imgContentType = 'image/png';
+
+  var imageString = 'data:' + imgContentType + ';base64,' + stringData;
+
+  const user = {
+    name: req.body.name,
+    password: bcrypt.hashSync(req.body.password, 8),
+    dateOfBirth: req.body.dateOfBirth,
+    email: req.body.email,
+    image: imageString
+  };
 
   UserModel.create(user)
     .then(user => {
@@ -144,6 +156,11 @@ const register = (req, res) => {
       if (error.code == 11000) {
         res.status(400).json({
           error: 'User exists',
+          message: error.message
+        });
+      } else if (error.name == 'ValidationError') {
+        res.status(500).json({
+          error: 'ValidationError (Email)',
           message: error.message
         });
       } else {
