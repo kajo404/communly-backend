@@ -478,7 +478,7 @@ const deleteById = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists/:id/title update a board title
+ * @api {put} /tasklists/:id/title update a board title
  * @apiName UpdateTaskBoardTitle
  * @apiGroup TaskList
  *
