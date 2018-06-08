@@ -80,6 +80,66 @@ const getById = (req, res) => {
 };
 
 /**
+ * @api {get} /:id/tasks Get Tasks of a TaskBoard by ID
+ * @apiName GetTasksByTaskListID
+ * @apiGroup TaskList
+ *
+ * @apiParam {String} id Tasklists unique id.
+ *
+ * @apiSuccess {Object} taskList the taskList object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     { tasks: [
+ *        { isDone: false, _id: 5b1a4009322e5a4e00a38122, name: 'dsfdsf' }
+ *      ],
+        _id: 5b1a3ffd322e5a4e00a3811f
+      }
+ *
+ * @apiError BadRequest The request body must contain a tasklist id.
+ * @apiError BadRequest There is no tasklist with the requested id.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a tasklist id"
+       }
+ */
+const getTasks = (req, res) => {
+  if (!req.params.id) {
+    res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request must contain a tasklist id.'
+    });
+  }
+  TaskListModel.findById(req.params.id)
+    .select('tasks')
+    .populate({
+      path: 'tasks',
+      select: ['name', 'assignee', 'isDone'],
+      populate: {
+        path: 'assignee',
+        select: 'name'
+      }
+    })
+    .exec()
+    .then(taskList => {
+      console.log(taskList);
+      res.status(200).json({
+        taskList
+      });
+    })
+    .catch(err => {
+      console.log('error', err);
+      res.status(400).json({
+        error: 'Bad Request',
+        message: `No TaskList with id '${req.params.id}' found.`
+      });
+    });
+};
+
+/**
  * @api {get} /tasklists Get all TaskLists
  * @apiName GetAllTaskLists
  * @apiGroup TaskList
@@ -484,5 +544,6 @@ module.exports = {
   deleteById,
   addUser,
   addTasks,
-  updateTitle
+  updateTitle,
+  getTasks
 };

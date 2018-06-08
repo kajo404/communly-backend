@@ -6,8 +6,15 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const TaskListController = require('../controllers/taskList');
 
-router.get('/', middlewares.checkAuthentication, TaskListController.getAll);
+// The order of the declaration is important when the HTTP method is the same,
+// Please leave :id/tasks on top
+router.get(
+  '/:id/tasks',
+  middlewares.checkAuthentication,
+  TaskListController.getTasks
+);
 router.get('/:id', middlewares.checkAuthentication, TaskListController.getById);
+router.get('/', middlewares.checkAuthentication, TaskListController.getAll);
 router.post('/', middlewares.checkAuthentication, TaskListController.create);
 router.delete(
   '/:id',
