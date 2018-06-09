@@ -84,8 +84,7 @@ const login = (req, res) => {
  *
  * @apiParam {String} email Users unique email address.
  * @apiParam {String} password Users password.
- * @apiParam {String} firstname Firstname the User would prefer to use
- * @apiParam {String} lastname Lastname the User would prefer to use
+ * @apiParam {String} name Name the User would prefer to use
  * @apiParam {Date} [dateOfBirth] Date of birth for the User
  * @apiParam {String} [roles = 'user'] Array of Roles. Can be 'admin','user' or both
  *
@@ -108,30 +107,22 @@ const login = (req, res) => {
        }
  */
 const register = (req, res) => {
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) {
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'password'))
     return res.status(400).json({
       error: 'Bad Request',
       message: 'The request body must contain a password property'
     });
-  }
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'firstname')) {
+
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'name'))
     return res.status(400).json({
       error: 'Bad Request',
-      message: 'The request body must contain a firstname property'
+      message: 'The request body must contain a name property'
     });
-  }
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'lastname')) {
-    return res.status(400).json({
-      error: 'Bad Request',
-      message: 'The request body must contain a lastname property'
-    });
-  }
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) {
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
     return res.status(400).json({
       error: 'Bad Request',
       message: 'The request body must contain a email property'
     });
-  }
 
   var imgData = fs.readFileSync(path.resolve('src/assets/avatar.png'));
   var stringData = Buffer.from(imgData).toString('base64');
@@ -140,8 +131,7 @@ const register = (req, res) => {
   var imageString = 'data:' + imgContentType + ';base64,' + stringData;
 
   const user = {
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
+    name: req.body.name,
     password: bcrypt.hashSync(req.body.password, 8),
     dateOfBirth: req.body.dateOfBirth,
     email: req.body.email,

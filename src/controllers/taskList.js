@@ -24,8 +24,7 @@ const mongoose = require('mongoose');
         "_id": "5b0d09a50986de06c7f7293d",
         "author": {
             "_id": "5afd440d8dfabd74b8297151",
-            "firstname": "Jon",
-            "lastname": "Doe"
+            "name": "Jon Doe"
         },
         "title": "1234",
         "creationDate": "2018-05-29T08:04:53.863Z"
@@ -52,18 +51,18 @@ const getById = (req, res) => {
   TaskListModel.findById(req.params.id)
     .populate({
       path: 'members',
-      select: ['firstname', 'lastname']
+      select: 'name'
     })
     .populate({
       path: 'author',
-      select: ['firstname', 'lastname']
+      select: 'name'
     })
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: ['firstname', 'lastname']
+        select: 'name'
       }
     })
     .exec()
@@ -115,18 +114,18 @@ const getAll = (req, res) => {
   })
     .populate({
       path: 'members',
-      select: ['firstname', 'lastname']
+      select: 'name'
     })
     .populate({
       path: 'author',
-      select: ['firstname', 'lastname']
+      select: 'name'
     })
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: ['firstname', 'lastname']
+        select: 'name'
       }
     })
     .exec()
@@ -204,8 +203,7 @@ const create = (req, res) => {
     "members": [
         {
             "_id": "5afd440d8dfabd74b8297151",
-            "firstname": "Jon",
-            "lastname": "Doe"
+            "name": "Jon Doe"
         }
     ],
     "task":
@@ -221,8 +219,7 @@ const create = (req, res) => {
     "_id": "5b098c0e70d4c7235cf9a6a6",
     "author": {
         "_id": "5afd440d8dfabd74b8297151",
-        "firstname": "Jon",
-        "lastname": "Doe"
+        "name": "Jon Doe"
     },
     "title": "test",
     "creationDate": "2018-05-26T16:32:14.069Z"
@@ -253,18 +250,18 @@ const addTasks = (req, res) => {
           })
             .populate({
               path: 'members',
-              select: ['firstname', 'lastname']
+              select: 'name'
             })
             .populate({
               path: 'author',
-              select: ['firstname', 'lastname']
+              select: 'name'
             })
             .populate({
               path: 'tasks',
               select: ['name', 'assignee', 'isDone'],
               populate: {
                 path: 'assignee',
-                sselect: ['firstname', 'lastname']
+                select: 'name'
               }
             })
             .exec()
@@ -343,18 +340,18 @@ const addUser = (req, res) => {
       )
         .populate({
           path: 'members',
-          select: ['firstname', 'lastname']
+          select: 'name'
         })
         .populate({
           path: 'author',
-          select: ['firstname', 'lastname']
+          select: 'name'
         })
         .populate({
           path: 'tasks',
           select: ['name', 'assignee', 'isDone'],
           populate: {
             path: 'assignee',
-            select: ['firstname', 'lastname']
+            select: 'name'
           }
         })
         .exec()

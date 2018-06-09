@@ -7,7 +7,7 @@ const TaskListModel = require('../models/taskList');
 const AnnouncementModel = require('../models/announcement');
 
 const getAll = (req, res) => {
-  UserModel.find({}, 'firstname')
+  UserModel.find({}, 'name')
     .exec()
     .then(users => {
       res.status(200).json({
