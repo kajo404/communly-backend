@@ -28,57 +28,37 @@ const mongoose = require('mongoose');
  *
  */
 const assignUser = (req, res) => {
-  // todo check for task list member or admin
-  TaskModel.findByIdAndUpdate(req.params.taskid, {
-    assignee: new mongoose.mongo.ObjectId(req.params.userid)
+  TaskListModel.findOne({
+    tasks: { $in: [req.params.taskid] }
   })
-    .populate({ path: 'assignee', select: 'name' })
     .exec()
-    .then(task => res.status(200).json(task))
-    .catch(error =>
-      res.status(500).json({
-        error: 'Internal server error',
-        message: error.message
+    .then(taskList => {
+      //permission check
+      if (
+        !(
+          taskList.author == req.userId ||
+          req.isAdmin == 'true' ||
+          taskList.members.indexOf(req.userId) >= 0
+        )
+      ) {
+        return res.status(403).json({
+          error: 'Not Allowed',
+          message: 'Not allowed to access ressource'
+        });
+      }
+      //assign user
+      TaskModel.findByIdAndUpdate(req.params.taskid, {
+        assignee: new mongoose.mongo.ObjectId(req.params.userid)
       })
-    );
-};
-
-/**
- * @api {get} /byId/:id Get all tasks of a TaskBoard
- * @apiName GetAllTasks
- * @apiGroup Task
- *
- *
- * @apiSuccess {Array} tasks Array of Task objects.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
-          "tasks": [{ _id: 5b05a7dedc43694c58fffe01,
-                        name: 'dsfs',
-                        taskList: 5b05a7cedc43694c58fffdfa }]
-       }
- *
- * @apiError BadRequest Generic error. Could not get tasks.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
- *     {
-          "error": "Bad Request",
-          "message": "Generic error. Could not get tasks."
-       }
- */
-const getAll = (req, res) => {
-  TaskModel.find({ taskList: req.params.id })
-    .exec()
-    .then(tasks => {
-      res.status(200).json({ tasks: tasks });
-    })
-    .catch(err => {
-      res.status(400).json({
-        error: 'Bad Request',
-        message: 'User could not be assigned to task'
-      });
+        .populate({ path: 'assignee', select: ['firstname', 'lastname'] })
+        .exec()
+        .then(task => res.status(200).json(task))
+        .catch(error =>
+          res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+          })
+        );
     });
 };
 
