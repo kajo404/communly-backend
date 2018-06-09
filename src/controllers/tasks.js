@@ -175,8 +175,52 @@ const deleteTask = (req, res) => {
     });
 };
 
+/**
+ * @api {post} /tasks/:taskid/assign/:userid Assign a member.
+ * @apiName AssignMemberToTask
+ * @apiGroup Tasks
+ *
+ * @apiSuccess {Object} taskList the taskList object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+        "members": [
+          "5afd440d8dfabd74b8297151",
+          "5afd440d8dfabd74b8297152",
+          "5b098c0e70d4c7235cf9a6a5"
+        ],
+        "_id": "5b098c0e70d4c7235cf9a6a6",
+        "author": "5afd440d8dfabd74b8297151",
+        "title": "test",
+        "creationDate": "2018-05-26T16:32:14.069Z"
+}
+ *
+ */
+const changeStatus = (req, res) => {
+  console.log(req.body.taskStatus);
+  TaskModel.findByIdAndUpdate(req.params.taskid, {
+    isDone: req.body.taskStatus
+  })
+
+    //remove this and fix FE
+    .populate({ path: 'tasklists', select: 'isDone' })
+    .exec()
+    .then(result => {
+      console.log(result);
+      res.status(200).json(result);
+    })
+    .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Task status could not be changed.'
+      });
+    });
+};
+
 module.exports = {
   getAll,
   assignUser,
-  deleteTask
+  deleteTask,
+  changeStatus
 };
