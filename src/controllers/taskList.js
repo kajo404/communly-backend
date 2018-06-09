@@ -51,18 +51,18 @@ const getById = (req, res) => {
   TaskListModel.findById(req.params.id)
     .populate({
       path: 'members',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'author',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: 'name'
+        select: ['name', 'image']
       }
     })
     .exec()
@@ -120,7 +120,7 @@ const getTasks = (req, res) => {
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: 'name'
+        select: ['name', 'image']
       }
     })
     .exec()
@@ -174,18 +174,18 @@ const getAll = (req, res) => {
   })
     .populate({
       path: 'members',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'author',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: 'name'
+        select: ['name', 'image']
       }
     })
     .exec()
@@ -314,7 +314,7 @@ const addTasks = (req, res) => {
             })
             .populate({
               path: 'author',
-              select: 'name'
+              select: ['name', 'image']
             })
             .populate({
               path: 'tasks',
@@ -404,7 +404,7 @@ const addUser = (req, res) => {
         })
         .populate({
           path: 'author',
-          select: 'name'
+          select: ['name', 'image']
         })
         .populate({
           path: 'tasks',
