@@ -60,7 +60,12 @@ const login = (req, res) => {
       // create a token
       const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
-        { id: user._id, name: user.name, isAdmin: isAdmin },
+        {
+          id: user._id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          isAdmin: isAdmin
+        },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
@@ -84,7 +89,8 @@ const login = (req, res) => {
  *
  * @apiParam {String} email Users unique email address.
  * @apiParam {String} password Users password.
- * @apiParam {String} name Name the User would prefer to use
+ * @apiParam {String} firstname First Name the User would prefer to use
+ * @apiParam {String} lastname Last Name the User would prefer to use
  * @apiParam {Date} [dateOfBirth] Date of birth for the User
  * @apiParam {String} [roles = 'user'] Array of Roles. Can be 'admin','user' or both
  *
@@ -113,10 +119,15 @@ const register = (req, res) => {
       message: 'The request body must contain a password property'
     });
 
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'name'))
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'firstname'))
     return res.status(400).json({
       error: 'Bad Request',
-      message: 'The request body must contain a name property'
+      message: 'The request body must contain a firstname property'
+    });
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'lastname'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a lastname property'
     });
   if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
     return res.status(400).json({
@@ -131,7 +142,8 @@ const register = (req, res) => {
   var imageString = 'data:' + imgContentType + ';base64,' + stringData;
 
   const user = {
-    name: req.body.name,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
     password: bcrypt.hashSync(req.body.password, 8),
     dateOfBirth: req.body.dateOfBirth,
     email: req.body.email,
@@ -144,7 +156,12 @@ const register = (req, res) => {
       // create a token
       const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
-        { id: user._id, name: user.name, isAdmin: isAdmin },
+        {
+          id: user._id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          isAdmin: isAdmin
+        },
         config.JwtSecret,
         {
           expiresIn: 86400 // expires in 24 hours
