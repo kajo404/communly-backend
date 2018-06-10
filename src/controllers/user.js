@@ -5,6 +5,7 @@ const UserModel = require('../models/user');
 const TaskModel = require('../models/task');
 const TaskListModel = require('../models/taskList');
 const AnnouncementModel = require('../models/announcement');
+const bcrypt = require('bcryptjs');
 
 const getAll = (req, res) => {
   UserModel.find({}, 'name')
@@ -160,6 +161,128 @@ const getTasklistsAsMemeber = (req, res) => {
 };
 
 /**
+ * @api {post} /data update name emial dateOfBirth
+ * @apiName update user data
+ * @apiGroup User
+ *
+ * @apiParam {name emial dateOfBirth} new Data.
+ *
+ * @apiSuccess {String} token Access token for the User.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "_id": "5afc47f1234d724bc4c90b44"
+       }
+ *
+ * @apiError BadRequest The request body must contain a name/emial/dateOfBirth property.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a name property"
+       }
+ */
+const updateData = (req, res) => {
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'name'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a name property'
+    });
+
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a email property'
+    });
+
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'dateOfBirth'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a dateOfBirth property'
+    });
+
+  var update = {
+    name: req.body.name,
+    email: req.body.email,
+    dateOfBirth: req.body.dateOfBirth
+  };
+
+  UserModel.findByIdAndUpdate(req.userId, update)
+    .exec()
+    .then(user => {
+      if (!user)
+        return res.status(404).json({
+          error: 'Not Found',
+          message: `User not found`
+        });
+
+      res.status(200).json(user);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: error.message
+      })
+    );
+};
+
+/**
+ * @api {post} /password password
+ * @apiName update user password
+ * @apiGroup User
+ *
+ * @apiParam password.
+ *
+ * @apiSuccess {String} token Access token for the User.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "_id": "5afc47f1234d724bc4c90b44"
+       }
+ *
+ * @apiError BadRequest The request body must contain a password property.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a password property"
+       }
+ */
+const updatePassword = (req, res) => {
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'password'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a password property'
+    });
+
+  var update = {
+    password: bcrypt.hashSync(req.body.password, 8)
+  };
+
+  UserModel.findByIdAndUpdate(req.userId, update)
+    .exec()
+    .then(user => {
+      if (!user)
+        return res.status(404).json({
+          error: 'Not Found',
+          message: `User not found`
+        });
+
+      res.status(200).json(user);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: error.message
+      })
+    );
+};
+
+/**
  * @api {post} /picture update profile image
  * @apiName change user picture
  * @apiGroup User
@@ -174,16 +297,16 @@ const getTasklistsAsMemeber = (req, res) => {
           "_id": "5afc47f1234d724bc4c90b44"
        }
  *
- * @apiError BadRequest The request body must contain a password/email property.
+ * @apiError BadRequest The request body must contain a imageData property.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
  *     {
           "error": "Bad Request",
-          "message": "The request body must contain a image property"
+          "message": "The request body must contain a imageData property"
        }
  */
-const changePicture = (req, res) => {
+const updatePicture = (req, res) => {
   if (!Object.prototype.hasOwnProperty.call(req.body, 'imageData'))
     return res.status(400).json({
       error: 'Bad Request',
@@ -259,5 +382,7 @@ module.exports = {
   getTasklistsAsMemeber,
   getTasklistsAsAuthor,
   getAsignedTasks,
-  changePicture
+  updateData,
+  updatePassword,
+  updatePicture
 };
