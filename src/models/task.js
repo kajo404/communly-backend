@@ -13,7 +13,10 @@ const TaskSchema = new mongoose.Schema({
     ref: 'User',
     required: false
   },
-  isDone: { type: Boolean }
+  isDone: {
+    type: Boolean,
+    default: false
+  }
 });
 
 TaskSchema.set('versionKey', false);

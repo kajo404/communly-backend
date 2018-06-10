@@ -51,18 +51,18 @@ const getById = (req, res) => {
   TaskListModel.findById(req.params.id)
     .populate({
       path: 'members',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'author',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: 'name'
+        select: ['name', 'image']
       }
     })
     .exec()
@@ -72,6 +72,66 @@ const getById = (req, res) => {
       });
     })
     .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: `No TaskList with id '${req.params.id}' found.`
+      });
+    });
+};
+
+/**
+ * @api {get} /:id/tasks Get Tasks of a TaskBoard by ID
+ * @apiName GetTasksByTaskListID
+ * @apiGroup TaskList
+ *
+ * @apiParam {String} id Tasklists unique id.
+ *
+ * @apiSuccess {Object} taskList the taskList object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     { tasks: [
+ *        { isDone: false, _id: 5b1a4009322e5a4e00a38122, name: 'dsfdsf' }
+ *      ],
+        _id: 5b1a3ffd322e5a4e00a3811f
+      }
+ *
+ * @apiError BadRequest The request body must contain a tasklist id.
+ * @apiError BadRequest There is no tasklist with the requested id.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a tasklist id"
+       }
+ */
+const getTasks = (req, res) => {
+  if (!req.params.id) {
+    res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request must contain a tasklist id.'
+    });
+  }
+  TaskListModel.findById(req.params.id)
+    .select('tasks')
+    .populate({
+      path: 'tasks',
+      select: ['name', 'assignee', 'isDone'],
+      populate: {
+        path: 'assignee',
+        select: ['name', 'image']
+      }
+    })
+    .exec()
+    .then(taskList => {
+      console.log(taskList);
+      res.status(200).json({
+        taskList
+      });
+    })
+    .catch(err => {
+      console.log('error', err);
       res.status(400).json({
         error: 'Bad Request',
         message: `No TaskList with id '${req.params.id}' found.`
@@ -114,18 +174,18 @@ const getAll = (req, res) => {
   })
     .populate({
       path: 'members',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'author',
-      select: 'name'
+      select: ['name', 'image']
     })
     .populate({
       path: 'tasks',
       select: ['name', 'assignee', 'isDone'],
       populate: {
         path: 'assignee',
-        select: 'name'
+        select: ['name', 'image']
       }
     })
     .exec()
@@ -254,7 +314,7 @@ const addTasks = (req, res) => {
             })
             .populate({
               path: 'author',
-              select: 'name'
+              select: ['name', 'image']
             })
             .populate({
               path: 'tasks',
@@ -344,7 +404,7 @@ const addUser = (req, res) => {
         })
         .populate({
           path: 'author',
-          select: 'name'
+          select: ['name', 'image']
         })
         .populate({
           path: 'tasks',
@@ -417,11 +477,73 @@ const deleteById = (req, res) => {
     });
 };
 
+/**
+ * @api {put} /tasklists/:id/title update a board title
+ * @apiName UpdateTaskBoardTitle
+ * @apiGroup TaskList
+ *
+ * @apiParam {String} title The new title of the task list.
+ *
+ * @apiSuccess {Object} taskList the taskList object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     { members: [ 5b0ad5cfbe7b708aed9e4200, 5b0c0bc6cc1bf2d03597743d ],
+          tasks:
+          [ 5b181d8bba5358d762dec997,
+            5b181d93ba5358d762dec998,
+            5b181d95ba5358d762dec999 ],
+          _id: 5b1819663965d9d38d6336f3,
+          author: 5b0ad5cfbe7b708aed9e4200,
+          title: 'New title',
+          creationDate: 2018-06-06T17:27:02.067Z }
+ *
+ * @apiError BadRequest The request body must contain an author and a title.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Could not update Task List Title. The request body must contain the new title"
+       }
+ */
+
+const updateTitle = (req, res) => {
+  TaskListModel.findById(req.params.id)
+    .exec()
+    .then(tasklist => {
+      if (req.isAdmin === 'true' || tasklist.author == req.userId) {
+        TaskListModel.findByIdAndUpdate(req.params.id, {
+          title: req.body.title
+        })
+          .exec()
+          .then(result => {
+            res.status(200).json({
+              result
+            });
+          });
+      } else {
+        res.status(403).json({
+          error: 'Not Allowed',
+          message: 'User is not allowed to change board title'
+        });
+      }
+    })
+    .catch(err => {
+      res.status(404).json({
+        error: 'Not Found',
+        message: 'Task List could not be found'
+      });
+    });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   deleteById,
   addUser,
-  addTasks
+  addTasks,
+  updateTitle,
+  getTasks
 };

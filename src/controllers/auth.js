@@ -176,7 +176,7 @@ const register = (req, res) => {
  * @api {get} /auth/me Me
  * @apiName MeUser
  * @apiGroup User
- * 
+ *
  * @apiHeader {String} Authorization Bearer <token>
  *
  * @apiSuccess {String} _id user id.

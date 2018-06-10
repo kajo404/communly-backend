@@ -6,11 +6,7 @@ const router = express.Router();
 const middlewares = require('../middlewares');
 const TasksController = require('../controllers/tasks');
 
-router.get(
-  '/byId/:id',
-  middlewares.checkAuthentication,
-  TasksController.getAll
-);
+router.get('/:id', middlewares.checkAuthentication, TasksController.getAll);
 
 router.post(
   '/:taskid/assign/:userid',
@@ -22,6 +18,12 @@ router.delete(
   '/:taskid',
   middlewares.checkAuthentication,
   TasksController.deleteTask
+);
+
+router.put(
+  '/:taskid/status',
+  middlewares.checkAuthentication,
+  TasksController.changeStatus
 );
 
 module.exports = router;
