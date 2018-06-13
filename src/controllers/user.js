@@ -161,14 +161,16 @@ const getTasklistsAsMemeber = (req, res) => {
 };
 
 /**
- * @api {post} /data update name emial dateOfBirth
+ * @api {put} /data update firstname lastname email dateOfBirth
  * @apiName update user data
  * @apiGroup User
  *
- * @apiParam {name emial dateOfBirth} new Data.
+ * @apiParam {String} firstname 
+ * @apiParam {String} lastname 
+* @apiParam {String} email 
+  * @apiParam {String} dateOfBirth
  *
- * @apiSuccess {String} token Access token for the User.
- *
+ * @apiSuccess {String} _id user id.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -181,7 +183,7 @@ const getTasklistsAsMemeber = (req, res) => {
  *     HTTP/1.1 400 Not Found
  *     {
           "error": "Bad Request",
-          "message": "The request body must contain a name property"
+          "message": "The request body must contain a firstname property"
        }
  */
 const updateData = (req, res) => {
@@ -236,14 +238,15 @@ const updateData = (req, res) => {
 };
 
 /**
- * @api {post} /password password
+ * @api {put} /password password
  * @apiName update user password
  * @apiGroup User
  *
- * @apiParam password.
+* @apiParam {String}password.
  *
  * @apiSuccess {String} token Access token for the User.
  *
+* @apiSuccess {String} _id user id.
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -290,11 +293,11 @@ const updatePassword = (req, res) => {
 };
 
 /**
- * @api {post} /picture update profile image
+ * @api {put} /picture update profile image
  * @apiName change user picture
  * @apiGroup User
  *
- * @apiParam {file} new image.
+ * @apiParam {String} image.
  *
  * @apiSuccess {String} token Access token for the User.
  *
