@@ -28,19 +28,38 @@ const mongoose = require('mongoose');
  *
  */
 const assignUser = (req, res) => {
-  // todo check for task list member or admin
-  TaskModel.findByIdAndUpdate(req.params.taskid, {
-    assignee: req.params.userid
+  TaskListModel.findOne({
+    tasks: { $in: [req.params.taskid] }
   })
-    .populate({ path: 'assignee', select: 'name' })
     .exec()
-    .then(task => res.status(200).json(task))
-    .catch(error =>
-      res.status(500).json({
-        error: 'Internal server error',
-        message: error.message
+    .then(taskList => {
+      //permission check
+      if (
+        !(
+          taskList.author == req.userId ||
+          req.isAdmin == 'true' ||
+          taskList.members.indexOf(req.userId) >= 0
+        )
+      ) {
+        return res.status(403).json({
+          error: 'Not Allowed',
+          message: 'Not allowed to access ressource'
+        });
+      }
+      //assign user
+      TaskModel.findByIdAndUpdate(req.params.taskid, {
+        assignee: new mongoose.mongo.ObjectId(req.params.userid)
       })
-    );
+        .populate({ path: 'assignee', select: ['firstname', 'lastname'] })
+        .exec()
+        .then(task => res.status(200).json(task))
+        .catch(error =>
+          res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+          })
+        );
+    });
 };
 
 /**

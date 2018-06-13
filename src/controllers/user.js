@@ -8,7 +8,7 @@ const AnnouncementModel = require('../models/announcement');
 const bcrypt = require('bcryptjs');
 
 const getAll = (req, res) => {
-  UserModel.find({}, 'name')
+  UserModel.find({}, 'firstname lastname')
     .exec()
     .then(users => {
       res.status(200).json({

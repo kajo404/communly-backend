@@ -2,11 +2,14 @@
 
 const mongoose = require('mongoose');
 
-// Define the user schema
-
 const UserSchema = new mongoose.Schema(
   {
-    name: {
+    firstname: {
+      type: String,
+      trim: true,
+      required: true
+    },
+    lastname: {
       type: String,
       trim: true,
       required: true
@@ -48,5 +51,4 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.set('versionKey', false);
 
-// Export the User model
 module.exports = mongoose.model('User', UserSchema);
