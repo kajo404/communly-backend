@@ -185,10 +185,16 @@ const getTasklistsAsMemeber = (req, res) => {
        }
  */
 const updateData = (req, res) => {
-  if (!Object.prototype.hasOwnProperty.call(req.body, 'name'))
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'firstname'))
     return res.status(400).json({
       error: 'Bad Request',
-      message: 'The request body must contain a name property'
+      message: 'The request body must contain a firstname property'
+    });
+
+  if (!Object.prototype.hasOwnProperty.call(req.body, 'lastname'))
+    return res.status(400).json({
+      error: 'Bad Request',
+      message: 'The request body must contain a lastname property'
     });
 
   if (!Object.prototype.hasOwnProperty.call(req.body, 'email'))
@@ -204,7 +210,8 @@ const updateData = (req, res) => {
     });
 
   var update = {
-    name: req.body.name,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
     email: req.body.email,
     dateOfBirth: req.body.dateOfBirth
   };
