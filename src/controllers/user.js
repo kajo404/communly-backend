@@ -7,7 +7,7 @@ const TaskListModel = require('../models/taskList');
 const AnnouncementModel = require('../models/announcement');
 
 const getAll = (req, res) => {
-  UserModel.find({}, 'firstname lastname')
+  UserModel.find({}, 'firstname lastname image')
     .exec()
     .then(users => {
       res.status(200).json({
@@ -33,8 +33,8 @@ const getAll = (req, res) => {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "announcements": 
-          [ 
+          "announcements":
+          [
               {
                 title: 'Hello World',
                 content: 'abcde',
