@@ -28,10 +28,22 @@ router.get(
   UsersController.getAsignedTasks
 );
 
-router.post(
+router.put(
   '/picture',
   middlewares.checkAuthentication,
-  UsersController.changePicture
+  UsersController.updatePicture
+);
+
+router.put(
+  '/data',
+  middlewares.checkAuthentication,
+  UsersController.updateData
+);
+
+router.put(
+  '/password',
+  middlewares.checkAuthentication,
+  UsersController.updatePassword
 );
 
 module.exports = router;
