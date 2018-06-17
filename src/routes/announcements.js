@@ -11,10 +11,29 @@ router.post(
   middlewares.checkAuthentication,
   AnnouncementsController.create
 );
+
 router.get(
   '/',
   middlewares.checkAuthentication,
   AnnouncementsController.getAll
+);
+
+router.post(
+  '/:announcementid/upvotes',
+  middlewares.checkAuthentication,
+  AnnouncementsController.upvote
+);
+
+router.post(
+  '/:announcementid/downvotes',
+  middlewares.checkAuthentication,
+  AnnouncementsController.downvote
+);
+
+router.delete(
+  '/:announcementid/votes',
+  middlewares.checkAuthentication,
+  AnnouncementsController.deleteVote
 );
 
 module.exports = router;

@@ -13,11 +13,15 @@ const AnnouncementSchema = new mongoose.Schema({
   creationDate: { type: Date, default: Date.now() },
   content: { type: String },
   isVotable: { type: Boolean, default: false },
-  upvotes: [
-    { type: mongoose.Schema.Types.ObjectId, ref: 'User', require: false }
-  ],
-  downvotes: [
-    { type: mongoose.Schema.Types.ObjectId, ref: 'User', require: false }
+  votes: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        require: false
+      },
+      vote: { type: String, enum: ['up', 'down'] }
+    }
   ]
 });
 
