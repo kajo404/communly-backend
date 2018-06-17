@@ -187,30 +187,38 @@ const getTaskAmount = (req, res) => {
 };
 
 /**
- * @api {get} /announcementAmount Get amount of announcements
- * @apiName GetAnnouncementAmount
+ * @api {get} /userStatsAnnuoncements Get user statistics for announcements
+ * @apiName GetUserStatsAnnuoncements
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Total count of announcements.
+ * @apiSuccess {Int} Max count of announcements.
+ * @apiSuccess {Int} Avg count of announcements.
+ * @apiSuccess {Int} Min count of announcements.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "announcementAmount": 100
+          "maxUserAnnouncements": 10,
+          "avgUserAnnouncements": 2.33,
+          "minUserAnnouncements": 4
        }
  *
- * @apiError BadRequest Generic error. Could not get number of announcements.
+ * @apiError BadRequest Generic error. Could not get announcements.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 400 Not Found
  *     {
           "error": "Bad Request",
-          "message": "Generic error. Could not get number of announcements."
+          "message": "Generic error. Could not get announcements."
        }
  */
 
-const getMaxAnnouncementAmount = (req, res) => {
+const getUserStatsAnnuoncements = (req, res) => {
+  var maxCount = 0;
+  var minCount = 0;
+  var sum = 0;
+  var length = 0;
   AnnouncementModel.aggregate([
     {
       $group: {
@@ -220,17 +228,236 @@ const getMaxAnnouncementAmount = (req, res) => {
     }
   ])
     .sort({ count: -1 })
-    .limit(1)
     .exec()
     .then(maxAnnouncementAmount => {
-      res.status(200).json({
-        maxAnnouncementAmount: maxAnnouncementAmount[0].count
+      maxCount = maxAnnouncementAmount[0].count;
+      length = maxAnnouncementAmount.length;
+      minCount = maxAnnouncementAmount[length - 1].count;
+      maxAnnouncementAmount.forEach(function(entry) {
+        sum += entry.count;
       });
+      UserModel.aggregate([
+        {
+          $project: {
+            firstname: 0,
+            lastname: 0,
+            email: 0,
+            password: 0,
+            image: 0,
+            created_at: 0,
+            updated_at: 0,
+            dateOfBirth: 0,
+            roles: 0
+          }
+        }
+      ])
+        .exec()
+        .then(result => {
+          if (result.length > length) {
+            minCount = 0;
+          }
+          res.status(200).json({
+            maxUserAnnouncements: maxCount,
+            avgUserAnnouncements: (sum / result.length).toFixed(2),
+            minUserAnnouncements: minCount
+          });
+        })
+        .catch(err => {
+          res.status(400).json({
+            error: 'Bad Request',
+            message: 'Generic error. Could not get users.'
+          });
+        });
     })
     .catch(err => {
       res.status(400).json({
         error: 'Bad Request',
-        message: 'Generic error. Could not get number of announcements.'
+        message: 'Generic error. Could not get announcements.'
+      });
+    });
+};
+
+/**
+ * @api {get} /userStatsTasklists Get user statistics for tasklists
+ * @apiName GetUserStatsTasklists
+ * @apiGroup Admin
+ *
+ *
+ * @apiSuccess {Int} Max count of tasklists.
+ * @apiSuccess {Int} Avg count of tasklists.
+ * @apiSuccess {Int} Min count of tasklists.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "maxUserTasklists": 10,
+          "avgUserTasklists": 2.33,
+          "minUserTasklists": 4
+       }
+ *
+ * @apiError BadRequest Generic error. Could not get tasklists.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Generic error. Could not get tasklists."
+       }
+ */
+
+const getUserStatsTasklists = (req, res) => {
+  var maxCount = 0;
+  var minCount = 0;
+  var sum = 0;
+  var length = 0;
+  TaskListModel.aggregate([
+    {
+      $group: {
+        _id: '$author',
+        count: { $sum: 1 }
+      }
+    }
+  ])
+    .sort({ count: -1 })
+    .exec()
+    .then(maxTasklistAmount => {
+      maxCount = maxTasklistAmount[0].count;
+      length = maxTasklistAmount.length;
+      minCount = maxTasklistAmount[length - 1].count;
+      maxTasklistAmount.forEach(function(entry) {
+        sum += entry.count;
+      });
+      UserModel.aggregate([
+        {
+          $project: {
+            firstname: 0,
+            lastname: 0,
+            email: 0,
+            password: 0,
+            image: 0,
+            created_at: 0,
+            updated_at: 0,
+            dateOfBirth: 0,
+            roles: 0
+          }
+        }
+      ])
+        .exec()
+        .then(result => {
+          if (result.length > length) {
+            minCount = 0;
+          }
+
+          res.status(200).json({
+            maxUserTasklists: maxCount,
+            avgUserTasklists: (sum / result.length).toFixed(2),
+            minUserTasklists: minCount
+          });
+        })
+        .catch(err => {
+          res.status(400).json({
+            error: 'Bad Request',
+            message: 'Generic error. Could not get users.'
+          });
+        });
+    })
+    .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Generic error. Could not get announcements.'
+      });
+    });
+};
+
+/**
+ * @api {get} /userStatsTasklists Get user statistics for tasklists
+ * @apiName GetUserStatsTasklists
+ * @apiGroup Admin
+ *
+ *
+ * @apiSuccess {Int} Max count of tasklists.
+ * @apiSuccess {Int} Avg count of tasklists.
+ * @apiSuccess {Int} Min count of tasklists.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "maxUserTasklists": 10,
+          "avgUserTasklists": 2.33,
+          "minUserTasklists": 4
+       }
+ *
+ * @apiError BadRequest Generic error. Could not get tasklists.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "Generic error. Could not get tasklists."
+       }
+ */
+
+const getUserStatsTasklistMembers = (req, res) => {
+  var maxCount = 0;
+  var minCount = 0;
+  var sum = 0;
+  var length = 0;
+  TaskListModel.aggregate([
+    {
+      $project: {
+        count: { $size: '$colors' }
+      }
+    }
+  ])
+    .sort({ count: -1 })
+    .exec()
+    .then(maxTasklistAmount => {
+      console.log(maxTasklistAmount);
+      maxCount = maxTasklistAmount[0].count;
+      length = maxTasklistAmount.length;
+      minCount = maxTasklistAmount[length - 1].count;
+      maxTasklistAmount.forEach(function(entry) {
+        sum += entry.count;
+      });
+      UserModel.aggregate([
+        {
+          $project: {
+            firstname: 0,
+            lastname: 0,
+            email: 0,
+            password: 0,
+            image: 0,
+            created_at: 0,
+            updated_at: 0,
+            dateOfBirth: 0,
+            roles: 0
+          }
+        }
+      ])
+        .exec()
+        .then(result => {
+          if (result.length > length) {
+            minCount = 0;
+          }
+
+          res.status(200).json({
+            maxUserTasklists: maxCount,
+            avgUserTasklists: (sum / result.length).toFixed(2),
+            minUserTasklists: minCount
+          });
+        })
+        .catch(err => {
+          res.status(400).json({
+            error: 'Bad Request',
+            message: 'Generic error. Could not get users.'
+          });
+        });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Generic error. Could not get announcements.'
       });
     });
 };
@@ -240,5 +467,7 @@ module.exports = {
   getAnnouncementAmount,
   getTasklistAmount,
   getTaskAmount,
-  getMaxAnnouncementAmount
+  getUserStatsAnnuoncements,
+  getUserStatsTasklists,
+  getUserStatsTasklistMembers
 };

@@ -7,38 +7,52 @@ const middlewares = require('../middlewares');
 const AdminController = require('../controllers/admin');
 
 router.get(
-  '/userAmount',
+  '/amount/user',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
   AdminController.getUserAmount
 );
 
 router.get(
-  '/announcementAmount',
+  '/amount/announcement',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
   AdminController.getAnnouncementAmount
 );
 
 router.get(
-  '/tasklistAmount',
+  '/amount/tasklist',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
   AdminController.getTasklistAmount
 );
 
 router.get(
-  '/taskAmount',
+  '/amount/task',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
   AdminController.getTaskAmount
 );
 
 router.get(
-  '/maxAnnouncementAmount',
+  '/stats/annuoncement',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
-  AdminController.getMaxAnnouncementAmount
+  AdminController.getUserStatsAnnuoncements
+);
+
+router.get(
+  '/stats/tasklist',
+  middlewares.checkAuthentication,
+  middlewares.checkAdminRights,
+  AdminController.getUserStatsTasklists
+);
+
+router.get(
+  '/stats/tasklistMembers',
+  middlewares.checkAuthentication,
+  middlewares.checkAdminRights,
+  AdminController.getUserStatsTasklistMembers
 );
 
 module.exports = router;
