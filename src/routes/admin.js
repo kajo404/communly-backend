@@ -55,4 +55,25 @@ router.get(
   AdminController.getUserStatsTasklistMembers
 );
 
+router.get(
+  '/stats/task',
+  middlewares.checkAuthentication,
+  middlewares.checkAdminRights,
+  AdminController.getUserStatsTasks
+);
+
+router.get(
+  '/stats/doneTask',
+  middlewares.checkAuthentication,
+  middlewares.checkAdminRights,
+  AdminController.getUserStatsDoneTasks
+);
+
+router.get(
+  '/stats/undoneTask',
+  middlewares.checkAuthentication,
+  middlewares.checkAdminRights,
+  AdminController.getUserStatsUndoneTasks
+);
+
 module.exports = router;
