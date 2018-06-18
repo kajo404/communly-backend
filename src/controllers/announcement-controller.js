@@ -161,7 +161,6 @@ const create = (req, res) => {
  */
 const upvote = (req, res) => {
   AnnouncementModel.findById(req.params.announcementid).then(announcement => {
-    console.log(announcement);
     const userVote = announcement.votes.find(voter => voter.user == req.userId);
 
     if (userVote) {
