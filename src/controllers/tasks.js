@@ -207,7 +207,6 @@ const changeStatus = (req, res) => {
     .populate({ path: 'tasklists', select: 'isDone' })
     .exec()
     .then(result => {
-      console.log(result);
       res.status(200).json(result);
     })
     .catch(err => {

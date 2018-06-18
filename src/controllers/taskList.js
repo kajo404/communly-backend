@@ -126,7 +126,6 @@ const getTasks = (req, res) => {
     })
     .exec()
     .then(taskList => {
-      console.log(taskList);
       res.status(200).json({
         taskList
       });

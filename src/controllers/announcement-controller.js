@@ -22,8 +22,7 @@ const UserModel = require('../models/user');
                 author: 'Lara Marie Reimer',
                 creationDate: '19/05/2018',
                 isVotable: false,
-                upvotes: [],
-                downvotes: []
+                votes: []
             }
           ]
        }
@@ -85,8 +84,7 @@ const getAll = (req, res) => {
                 author: 'Lara Marie Reimer',
                 creationDate: '19/05/2018',
                 isVotable: false,
-                upvotes: [],
-                downvotes: []
+                votes: []
             }
        }
  *
@@ -106,8 +104,7 @@ const create = (req, res) => {
     content: req.body.content,
     isVotable: req.body.isVotable,
     creationDate: Date.now(),
-    upvotes: [],
-    downvotes: []
+    votes: []
   };
 
   AnnouncementModel.create(announcement)
@@ -130,7 +127,185 @@ const create = (req, res) => {
     });
 };
 
+/**
+ * @api {post} /:announcementid/upvotes Upvote on announcement
+ * @apiName UpdateAnnouncementUpvotes
+ * @apiGroup Announcements
+ *
+ * @apiSuccess {Object} announcement The announcement object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     "announcement": 
+          { creationDate: 2018-05-23T16:44:15.190Z,
+            isVotable: true,
+            _id: 5b059a5fa1c1b2024bc547e2,
+            votes:
+              { vote: [Array],
+                _id: 5b265d8d481aac011fe1b8a0,
+                user: 5b05a4418db29402fdeb3eda 
+              },
+            author: 5b048af5ccb271001bdfbd03,
+            title: 'Hello!',
+            content: 'This is another announcement' 
+          }
+ *
+ * @apiError BadRequest The request body must contain a user.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a user."
+       }
+ */
+const upvote = (req, res) => {
+  AnnouncementModel.findById(req.params.announcementid).then(announcement => {
+    const userVote = announcement.votes.find(voter => voter.user == req.userId);
+
+    if (userVote) {
+      userVote.vote = 'up';
+      const voteIndex = announcement.votes.indexOf(userVote);
+      announcement.votes[voteIndex] = userVote;
+    } else {
+      announcement.votes.push({
+        vote: 'up',
+        user: req.userId
+      });
+    }
+
+    announcement
+      .save()
+      .then(result => {
+        res.status(200).json(result);
+      })
+      .catch(err => {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Announcement could not be updated.'
+        });
+      });
+  });
+};
+
+/**
+ * @api {post} /:announcementid/downvotes Downvote on announcement
+ * @apiName UpdateAnnouncementDownvotes
+ * @apiGroup Announcements
+ *
+ * @apiSuccess {Object} announcement The announcement object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "announcement": 
+          { creationDate: 2018-05-23T16:44:15.190Z,
+            isVotable: true,
+            _id: 5b059a5fa1c1b2024bc547e2,
+            votes:
+              { vote: 'down',
+                _id: 5b265d8d481aac011fe1b8a0,
+                user: 5b05a4418db29402fdeb3eda 
+              },
+            author: 5b048af5ccb271001bdfbd03,
+            title: 'Hello!',
+            content: 'This is another announcement' 
+          }
+       }
+ *
+ * @apiError BadRequest The request body must contain a user.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a user."
+       }
+ */
+const downvote = (req, res) => {
+  AnnouncementModel.findById(req.params.announcementid).then(announcement => {
+    const userVote = announcement.votes.find(voter => voter.user == req.userId);
+
+    if (userVote) {
+      userVote.vote = 'down';
+      const voteIndex = announcement.votes.indexOf(userVote);
+      announcement.votes[voteIndex] = userVote;
+    } else {
+      announcement.votes.push({
+        vote: 'down',
+        user: req.userId
+      });
+    }
+
+    announcement
+      .save()
+      .then(result => {
+        res.status(200).json(result);
+      })
+      .catch(err => {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Announcement could not be updated.'
+        });
+      });
+  });
+};
+
+/**
+ * @api {delete} /:announcementid/votes Delete vote on announcement
+ * @apiName DeleteAnnouncementVotes
+ * @apiGroup Announcements
+ *
+ * @apiSuccess {Object} announcement The announcement object.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     "announcement": 
+          { creationDate: 2018-05-23T16:44:15.190Z,
+            isVotable: true,
+            _id: 5b059a5fa1c1b2024bc547e2,
+            votes: [],
+            author: 5b048af5ccb271001bdfbd03,
+            title: 'Hello!',
+            content: 'This is another announcement' 
+          }
+ *
+ * @apiError BadRequest The request body must contain a user.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "The request body must contain a user."
+       }
+ */
+const deleteVote = (req, res) => {
+  AnnouncementModel.findById(req.params.announcementid).then(announcement => {
+    const userVote = announcement.votes.find(voter => voter.user == req.userId);
+
+    if (userVote) {
+      const voteIndex = announcement.votes.indexOf(userVote);
+      announcement.votes.splice(voteIndex, 1);
+    }
+
+    announcement
+      .save()
+      .then(result => {
+        res.status(200).json(result);
+      })
+      .catch(err => {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Announcement could not be updated.'
+        });
+      });
+  });
+};
+
 module.exports = {
   getAll,
-  create
+  create,
+  upvote,
+  downvote,
+  deleteVote
 };
