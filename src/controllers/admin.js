@@ -493,7 +493,8 @@ const getUserStatsTasks = (req, res) => {
   var minCount = 0;
   var sum = 0;
   var length = 0;
-  TaskListModel.aggregate([
+  var nullIdFound = false;
+  TaskModel.aggregate([
     {
       $group: {
         _id: '$assignee',
@@ -504,12 +505,43 @@ const getUserStatsTasks = (req, res) => {
     .sort({ count: -1 })
     .exec()
     .then(tasks => {
-      maxCount = tasks[0].count;
-      length = tasks.length;
-      minCount = tasks[length - 1].count;
       tasks.forEach(function(entry) {
-        sum += entry.count;
+        if (entry._id !== null) {
+          sum += entry.count;
+        } else {
+          nullIdFound = true;
+        }
       });
+
+      if (tasks.length > 1) {
+        if (tasks[0]._id === null) {
+          maxCount = tasks[1].count;
+        } else {
+          maxCount = tasks[0].count;
+        }
+      } else {
+        if (tasks[0]._id === null) {
+          maxCount = 0;
+        } else {
+          maxCount = tasks[0].count;
+        }
+      }
+
+      if (nullIdFound) {
+        length = tasks.length - 1;
+      } else {
+        length = tasks.length;
+      }
+
+      if (tasks[tasks.length - 1]._id !== null) {
+        minCount = tasks[tasks.length - 1].count;
+      } else {
+        if (tasks.length > 1) {
+          minCount = tasks[tasks.length - 2].count;
+        } else {
+          minCount = 0;
+        }
+      }
       UserModel.aggregate([
         {
           $project: {
@@ -585,7 +617,8 @@ const getUserStatsDoneTasks = (req, res) => {
   var minCount = 0;
   var sum = 0;
   var length = 0;
-  TaskListModel.aggregate([
+  var nullIdFound = false;
+  TaskModel.aggregate([
     {
       $group: {
         _id: '$assignee',
@@ -606,12 +639,43 @@ const getUserStatsDoneTasks = (req, res) => {
     .sort({ count: -1 })
     .exec()
     .then(tasks => {
-      maxCount = tasks[0].count;
-      length = tasks.length;
-      minCount = tasks[length - 1].count;
       tasks.forEach(function(entry) {
-        sum += entry.count;
+        if (entry._id !== null) {
+          sum += entry.count;
+        } else {
+          nullIdFound = true;
+        }
       });
+
+      if (tasks.length > 1) {
+        if (tasks[0]._id === null) {
+          maxCount = tasks[1].count;
+        } else {
+          maxCount = tasks[0].count;
+        }
+      } else {
+        if (tasks[0]._id === null) {
+          maxCount = 0;
+        } else {
+          maxCount = tasks[0].count;
+        }
+      }
+
+      if (nullIdFound) {
+        length = tasks.length - 1;
+      } else {
+        length = tasks.length;
+      }
+
+      if (tasks[tasks.length - 1]._id !== null) {
+        minCount = tasks[tasks.length - 1].count;
+      } else {
+        if (tasks.length > 1) {
+          minCount = tasks[tasks.length - 2].count;
+        } else {
+          minCount = 0;
+        }
+      }
       UserModel.aggregate([
         {
           $project: {
@@ -687,7 +751,8 @@ const getUserStatsUndoneTasks = (req, res) => {
   var minCount = 0;
   var sum = 0;
   var length = 0;
-  TaskListModel.aggregate([
+  var nullIdFound = false;
+  TaskModel.aggregate([
     {
       $group: {
         _id: '$assignee',
@@ -708,12 +773,43 @@ const getUserStatsUndoneTasks = (req, res) => {
     .sort({ count: -1 })
     .exec()
     .then(tasks => {
-      maxCount = tasks[0].count;
-      length = tasks.length;
-      minCount = tasks[length - 1].count;
       tasks.forEach(function(entry) {
-        sum += entry.count;
+        if (entry._id !== null) {
+          sum += entry.count;
+        } else {
+          nullIdFound = true;
+        }
       });
+
+      if (tasks.length > 1) {
+        if (tasks[0]._id === null) {
+          maxCount = tasks[1].count;
+        } else {
+          maxCount = tasks[0].count;
+        }
+      } else {
+        if (tasks[0]._id === null) {
+          maxCount = 0;
+        } else {
+          maxCount = tasks[0].count;
+        }
+      }
+
+      if (nullIdFound) {
+        length = tasks.length - 1;
+      } else {
+        length = tasks.length;
+      }
+
+      if (tasks[tasks.length - 1]._id !== null) {
+        minCount = tasks[tasks.length - 1].count;
+      } else {
+        if (tasks.length > 1) {
+          minCount = tasks[tasks.length - 2].count;
+        } else {
+          minCount = 0;
+        }
+      }
       UserModel.aggregate([
         {
           $project: {
