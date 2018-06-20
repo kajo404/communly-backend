@@ -142,7 +142,7 @@ const getTasklistAmount = (req, res) => {
  *     {
           "taskAmount": 200,
           "doneTaskAmount": 100,
-          "undoneTaskAmount": 100
+          "openTaskAmount": 100
        }
  *
  * @apiError BadRequest Generic error. Could not get number of tasks.
@@ -164,11 +164,11 @@ const getTaskAmount = (req, res) => {
         .count()
         .exec()
         .then(doneTaskAmount => {
-          var undoneTaskAmount = taskAmount - doneTaskAmount;
+          var openTaskAmount = taskAmount - doneTaskAmount;
           res.status(200).json({
             taskAmount: taskAmount,
             doneTaskAmount: doneTaskAmount,
-            undoneTaskAmount: undoneTaskAmount
+            openTaskAmount: openTaskAmount
           });
         })
         .catch(err => {
@@ -187,8 +187,8 @@ const getTaskAmount = (req, res) => {
 };
 
 /**
- * @api {get} /stats/annuoncement Get user statistics for announcements
- * @apiName GetUserStatsAnnuoncements
+ * @api {get} /stats/announcement Get user statistics for announcements
+ * @apiName GetUserStatsAnnouncements
  * @apiGroup Admin
  *
  *
@@ -214,7 +214,7 @@ const getTaskAmount = (req, res) => {
        }
  */
 
-const getUserStatsAnnuoncements = (req, res) => {
+const getUserStatsAnnouncements = (req, res) => {
   var maxCount = 0;
   var minCount = 0;
   var sum = 0;
@@ -719,21 +719,21 @@ const getUserStatsDoneTasks = (req, res) => {
 };
 
 /**
- * @api {get} /stats/undoneTask Get user statistics for undone tasks
- * @apiName GetUserStatsUndoneTasks
+ * @api {get} /stats/openTask Get user statistics for open tasks
+ * @apiName GetUserStatsOpenTasks
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of assigned undone tasks.
- * @apiSuccess {Int} Avg count of assigned undone tasks.
- * @apiSuccess {Int} Min count of assigned undone tasks.
+ * @apiSuccess {Int} Max count of assigned open tasks.
+ * @apiSuccess {Int} Avg count of assigned open tasks.
+ * @apiSuccess {Int} Min count of assigned open tasks.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
-          "maxAssignedUndoneTasks": 10,
-          "avgAssignedUndoneTasks": 2.33,
-          "minAssignedUndoneTasks": 4
+          "maxAssignedOpenTasks": 10,
+          "avgAssignedOpenTasks": 2.33,
+          "minAssignedOpenTasks": 4
        }
  *
  * @apiError BadRequest Generic error. Could not get done tasks.
@@ -746,7 +746,7 @@ const getUserStatsDoneTasks = (req, res) => {
        }
  */
 
-const getUserStatsUndoneTasks = (req, res) => {
+const getUserStatsOpenTasks = (req, res) => {
   var maxCount = 0;
   var minCount = 0;
   var sum = 0;
@@ -831,9 +831,9 @@ const getUserStatsUndoneTasks = (req, res) => {
             minCount = 0;
           }
           res.status(200).json({
-            maxAssignedUndoneTasks: maxCount,
-            avgAssignedUndoneTasks: (sum / result.length).toFixed(2),
-            minAssignedUndoneTasks: minCount
+            maxAssignedOpenTasks: maxCount,
+            avgAssignedOpenTasks: (sum / result.length).toFixed(2),
+            minAssignedOpenTasks: minCount
           });
         })
         .catch(err => {
@@ -847,7 +847,7 @@ const getUserStatsUndoneTasks = (req, res) => {
       console.log(err);
       res.status(400).json({
         error: 'Bad Request',
-        message: 'Generic error. Could not get undone tasks.'
+        message: 'Generic error. Could not get open tasks.'
       });
     });
 };
@@ -857,10 +857,10 @@ module.exports = {
   getAnnouncementAmount,
   getTasklistAmount,
   getTaskAmount,
-  getUserStatsAnnuoncements,
+  getUserStatsAnnouncements,
   getUserStatsTasklists,
   getUserStatsTasklistMembers,
   getUserStatsTasks,
   getUserStatsDoneTasks,
-  getUserStatsUndoneTasks
+  getUserStatsOpenTasks
 };

@@ -35,10 +35,10 @@ router.get(
 );
 
 router.get(
-  '/stats/annuoncement',
+  '/stats/announcement',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
-  AdminController.getUserStatsAnnuoncements
+  AdminController.getUserStatsAnnouncements
 );
 
 router.get(
@@ -70,10 +70,10 @@ router.get(
 );
 
 router.get(
-  '/stats/undoneTask',
+  '/stats/openTask',
   middlewares.checkAuthentication,
   middlewares.checkAdminRights,
-  AdminController.getUserStatsUndoneTasks
+  AdminController.getUserStatsOpenTasks
 );
 
 module.exports = router;
