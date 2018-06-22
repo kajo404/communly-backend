@@ -18,6 +18,12 @@ router.get(
   AnnouncementsController.getAll
 );
 
+router.delete(
+  '/:announcementid',
+  middlewares.checkAuthentication,
+  AnnouncementsController.deleteAnnouncement
+);
+
 router.post(
   '/:announcementid/upvotes',
   middlewares.checkAuthentication,

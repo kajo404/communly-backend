@@ -9,7 +9,7 @@ const TasksController = require('../controllers/tasks');
 router.get('/:id', middlewares.checkAuthentication, TasksController.getAll);
 
 router.post(
-  '/:taskid/assign/:userid',
+  '/:taskid/assignee/:userid',
   middlewares.checkAuthentication,
   TasksController.assignUser
 );
