@@ -147,36 +147,32 @@ const create = (req, res) => {
 const deleteAnnouncement = (req, res) => {
   AnnouncementModel.findById(req.params.announcementid)
     .then(announcement => {
-      UserModel.findById(req.userId).then(user => {
-        const canDeleteAnnouncement =
-          user.roles.includes('admin') || announcement.author._id == user._id;
+      const canDeleteAnnouncement =
+        req.isAdmin || announcement.author._id == req.userId;
 
-        if (canDeleteAnnouncement) {
-          AnnouncementModel.deleteOne(announcement)
-            .then(res.status(200).json())
-            .catch(err => {
-              res.status(400).json({
-                error: 'Bad Request',
-                message: 'Could not delete announcement.'
-              });
+      if (canDeleteAnnouncement) {
+        AnnouncementModel.deleteOne(announcement)
+          .then(res.status(200))
+          .catch(err => {
+            res.status(400).json({
+              error: 'Bad Request',
+              message: 'Could not delete announcement.'
             });
-        } else {
-          res.status(400).json({
-            error: 'Bad Request',
-            message:
-              'You must be admin or author of this announcement to delete.'
           });
-        }
+      } else {
+        res.status(403).json({
+          error: 'Bad Request',
+          message: 'You must be admin or author of this announcement to delete.'
+        });
+      }
 
-        if (error) {
-          res.status(400).json({
-            error: 'Bad Request',
-            message: 'Could not delete announcement.'
-          });
-        }
-      });
+      if (error) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Could not delete announcement.'
+        });
+      }
     })
-    .then(res.status(200))
     .catch(err => {
       res.status(400).json({
         error: 'Bad Request',
