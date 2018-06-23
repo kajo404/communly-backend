@@ -198,7 +198,6 @@ const deleteTask = (req, res) => {
  *
  */
 const changeStatus = (req, res) => {
-  console.log(req.body.taskStatus);
   TaskModel.findByIdAndUpdate(req.params.taskid, {
     isDone: req.body.taskStatus
   })

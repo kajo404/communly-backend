@@ -52,6 +52,16 @@ const checkAuthentication = (req, res, next) => {
   });
 };
 
+const checkAdminRights = (req, res, next) => {
+  if (!req.isAdmin) {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'User is not an administrator!'
+    });
+  }
+  next();
+};
+
 const errorHandler = (err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
@@ -63,5 +73,6 @@ const errorHandler = (err, req, res, next) => {
 module.exports = {
   allowCrossDomain,
   checkAuthentication,
+  checkAdminRights,
   errorHandler
 };
