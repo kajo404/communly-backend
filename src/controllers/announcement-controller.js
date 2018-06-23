@@ -138,7 +138,7 @@ const create = (req, res) => {
  * @apiError BadRequest You must be admin or author of this announcement to delete.
  *
  * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Not Found
+ *     HTTP/1.1 403 Not Found
  *     {
           "error": "Bad Request",
           "message": "You must be admin or author of this announcement to delete."

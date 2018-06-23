@@ -7,12 +7,12 @@ const TaskModel = require('../models/task');
 const TaskListModel = require('../models/taskList');
 
 /**
- * @api {get} /amount/user Get amount of user
+ * @api {get} /amount/user Total User Count
  * @apiName GetUserAmount
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Total count of users.
+ * @apiSuccess {int} userAmount count of users.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -48,12 +48,12 @@ const getUserAmount = (req, res) => {
 };
 
 /**
- * @api {get} /amount/announcement Get amount of announcements
+ * @api {get} /amount/announcement Total amount of announcements
  * @apiName GetAnnouncementAmount
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Total count of announcements.
+ * @apiSuccess {int} announcementAmount count of announcements.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -89,12 +89,12 @@ const getAnnouncementAmount = (req, res) => {
 };
 
 /**
- * @api {get} /amount/tasklist Get amount of tasklists
+ * @api {get} /amount/tasklist Total amount of Task Lists
  * @apiName GetTasklistAmount
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Total count of tasklists.
+ * @apiSuccess {int} tasklistAmount count of tasklists.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -130,12 +130,14 @@ const getTasklistAmount = (req, res) => {
 };
 
 /**
- * @api {get} /amount/task Get amount of tasks
+ * @api {get} /amount/task Total amount of tasks
  * @apiName GetTaskAmount
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Total count of tasks.
+ * @apiSuccess {int} taskAmount count of tasks.
+ * @apiSuccess {int} doneTaskAmount count of completed tasks.
+ * @apiSuccess {int} openTaskAmount count of open tasks.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -187,14 +189,14 @@ const getTaskAmount = (req, res) => {
 };
 
 /**
- * @api {get} /stats/announcement Get user statistics for announcements
+ * @api {get} /stats/announcement Announcement User Statistics
  * @apiName GetUserStatsAnnouncements
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of announcements.
- * @apiSuccess {Int} Avg count of announcements.
- * @apiSuccess {Int} Min count of announcements.
+ * @apiSuccess {int} maxUserAnnouncements count of announcements.
+ * @apiSuccess {int} avgUserAnnouncements count of announcements.
+ * @apiSuccess {int} minUserAnnouncements count of announcements.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -278,14 +280,14 @@ const getUserStatsAnnouncements = (req, res) => {
 };
 
 /**
- * @api {get} /stats/tasklist Get user statistics for tasklists
+ * @api {get} /stats/tasklist Task List User Statistics
  * @apiName GetUserStatsTasklists
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of tasklists.
- * @apiSuccess {Int} Avg count of tasklists.
- * @apiSuccess {Int} Min count of tasklists.
+ * @apiSuccess {int} maxUserTasklists count of tasklists.
+ * @apiSuccess {int} avgUserTasklists count of tasklists.
+ * @apiSuccess {int} minUserTasklists count of tasklists.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -370,14 +372,14 @@ const getUserStatsTasklists = (req, res) => {
 };
 
 /**
- * @api {get} /stats/tasklistMembers Get user statistics for tasklists members
+ * @api {get} /stats/tasklistMembers Task Lists Member Statistics
  * @apiName GetUserStatsTasklistMembers
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of tasklistmembers.
- * @apiSuccess {Int} Avg count of tasklistmembers.
- * @apiSuccess {Int} Min count of tasklistmembers.
+ * @apiSuccess {int} maxMembersTasklists count of tasklistmembers.
+ * @apiSuccess {int} avgMembersTasklists count of tasklistmembers.
+ * @apiSuccess {int} minMembersTasklists count of tasklistmembers.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -461,14 +463,14 @@ const getUserStatsTasklistMembers = (req, res) => {
 };
 
 /**
- * @api {get} /stats/task Get user statistics for tasks
+ * @api {get} /stats/task Task User Statistics
  * @apiName GetUserStatsTasks
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of assigned tasks.
- * @apiSuccess {Int} Avg count of assigned tasks.
- * @apiSuccess {Int} Min count of assigned tasks.
+ * @apiSuccess {int} maxAssignedTasks count of assigned tasks.
+ * @apiSuccess {int} avgAssignedTasks count of assigned tasks.
+ * @apiSuccess {int} minAssignedTasks count of assigned tasks.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -585,14 +587,14 @@ const getUserStatsTasks = (req, res) => {
 };
 
 /**
- * @api {get} /stats/doneTask Get user statistics for done tasks
+ * @api {get} /stats/doneTask Done Tasks User Statistics
  * @apiName GetUserStatsDoneTasks
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of assigned done tasks.
- * @apiSuccess {Int} Avg count of assigned done tasks.
- * @apiSuccess {Int} Min count of assigned done tasks.
+ * @apiSuccess {int} maxAssignedDoneTasks count of assigned done tasks.
+ * @apiSuccess {int} avgAssignedDoneTasks count of assigned done tasks.
+ * @apiSuccess {int} minAssignedDoneTasks count of assigned done tasks.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -719,14 +721,14 @@ const getUserStatsDoneTasks = (req, res) => {
 };
 
 /**
- * @api {get} /stats/openTask Get user statistics for open tasks
+ * @api {get} /stats/openTask Open Tasks User Statistics
  * @apiName GetUserStatsOpenTasks
  * @apiGroup Admin
  *
  *
- * @apiSuccess {Int} Max count of assigned open tasks.
- * @apiSuccess {Int} Avg count of assigned open tasks.
- * @apiSuccess {Int} Min count of assigned open tasks.
+ * @apiSuccess {int} maxAssignedOpenTasks count of assigned open tasks.
+ * @apiSuccess {int} avgAssignedOpenTasks count of assigned open tasks.
+ * @apiSuccess {int} minAssignedOpenTasks count of assigned open tasks.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK

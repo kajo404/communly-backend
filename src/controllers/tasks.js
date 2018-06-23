@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('../config');
 const TaskModel = require('../models/task');
 const TaskListModel = require('../models/taskList');
 const mongoose = require('mongoose');
@@ -33,7 +32,7 @@ const assignUser = (req, res) => {
   })
     .exec()
     .then(taskList => {
-      //permission check
+      //authorization
       if (
         !(
           taskList.author == req.userId ||
@@ -63,9 +62,9 @@ const assignUser = (req, res) => {
 };
 
 /**
- * @api {get} /byId/:id Get all tasks of a TaskBoard
+ * @api {get} /tasks/byId/:id Get all tasks of a TaskBoard
  * @apiName GetAllTasks
- * @apiGroup Task
+ * @apiGroup Tasks
  *
  *
  * @apiSuccess {Array} tasks Array of Task objects.

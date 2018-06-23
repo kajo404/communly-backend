@@ -7,8 +7,8 @@ const UserModel = require('../models/user');
 const mongoose = require('mongoose');
 
 /**
- * @api {get} /tasklists/:id Get TaskList by ID
- * @apiName GetTaskListByID
+ * @api {get} /tasklists/:id TaskList by ID
+ * @apiName TaskListByID
  * @apiGroup TaskList
  *
  * @apiParam {String} id Tasklists unique id.
@@ -81,7 +81,7 @@ const getById = (req, res) => {
 };
 
 /**
- * @api {get} /:id/tasks Get Tasks of a TaskBoard by ID
+ * @api {get} tasklists/:id/tasks Tasks of a TaskBoard by ID
  * @apiName GetTasksByTaskListID
  * @apiGroup TaskList
  *
@@ -140,7 +140,7 @@ const getTasks = (req, res) => {
 };
 
 /**
- * @api {get} /tasklists Get all TaskLists
+ * @api {get} /tasklists All TaskLists
  * @apiName GetAllTaskLists
  * @apiGroup TaskList
  *
@@ -203,7 +203,7 @@ const getAll = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists create a new TaskList
+ * @api {post} /tasklists Create a new TaskList
  * @apiName CreateNewTaskList
  * @apiGroup TaskList
  *
@@ -236,7 +236,7 @@ const create = (req, res) => {
   TaskListModel.create(taskList)
     .then(tasklist => {
       res.status(200).json({
-        tasklist //can this return object be populated?
+        tasklist
       });
     })
     .catch(err => {
@@ -248,7 +248,7 @@ const create = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists/:id/tasks Add an array of tasks to a task list. Updates if task already exists
+ * @api {post} /tasklists/:id/tasks Add an array of tasks to a task list.
  * @apiName AddTaskToTaskList
  * @apiGroup TaskList
  *
@@ -355,7 +355,7 @@ const addTasks = (req, res) => {
 };
 
 /**
- * @api {post} /tasklists/:id/members Add new members to a task list.
+ * @api {post} /tasklists/:id/members Add members to a task list.
  * @apiName AddMembersToTaskList
  * @apiGroup TaskList
  *
@@ -429,7 +429,7 @@ const addUser = (req, res) => {
     });
 };
 /**
- * @api {delete} /:id Deletes a task list by id
+ * @api {delete} /tasklists/:id Deletes a task list by id
  * @apiName DeleteById
  * @apiGroup TaskList
  *
