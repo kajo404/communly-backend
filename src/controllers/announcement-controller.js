@@ -128,6 +128,60 @@ const create = (req, res) => {
 };
 
 /**
+ * @api {delete} /:announcementid Delete an announcement
+ * @apiName DeleteAnnouncement
+ * @apiGroup Announcements
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *
+ * @apiError BadRequest You must be admin or author of this announcement to delete.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Bad Request",
+          "message": "You must be admin or author of this announcement to delete."
+       }
+ */
+const deleteAnnouncement = (req, res) => {
+  AnnouncementModel.findById(req.params.announcementid)
+    .then(announcement => {
+      const canDeleteAnnouncement =
+        req.isAdmin || announcement.author._id == req.userId;
+
+      if (canDeleteAnnouncement) {
+        AnnouncementModel.deleteOne(announcement)
+          .then(res.status(200))
+          .catch(err => {
+            res.status(400).json({
+              error: 'Bad Request',
+              message: 'Could not delete announcement.'
+            });
+          });
+      } else {
+        res.status(403).json({
+          error: 'Bad Request',
+          message: 'You must be admin or author of this announcement to delete.'
+        });
+      }
+
+      if (error) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Could not delete announcement.'
+        });
+      }
+    })
+    .catch(err => {
+      res.status(400).json({
+        error: 'Bad Request',
+        message: 'Could not delete announcement.'
+      });
+    });
+};
+
+/**
  * @api {post} /:announcementid/upvotes Upvote on announcement
  * @apiName UpdateAnnouncementUpvotes
  * @apiGroup Announcements
@@ -305,6 +359,7 @@ const deleteVote = (req, res) => {
 module.exports = {
   getAll,
   create,
+  deleteAnnouncement,
   upvote,
   downvote,
   deleteVote
