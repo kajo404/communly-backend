@@ -152,8 +152,6 @@ const register = (req, res) => {
 
   UserModel.create(user)
     .then(user => {
-      // if user is registered without errors
-      // create a token
       const isAdmin = user.roles.includes('admin');
       const token = jwt.sign(
         {
@@ -164,7 +162,7 @@ const register = (req, res) => {
         },
         config.JwtSecret,
         {
-          expiresIn: 86400 // expires in 24 hours
+          expiresIn: 259200 // expires in 72 hours
         }
       );
       res.status(200).json({ token: token });
