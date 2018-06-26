@@ -135,9 +135,9 @@ const register = (req, res) => {
       message: 'The request body must contain a email property'
     });
 
-  var imgData = fs.readFileSync(path.resolve('src/assets/avatar.png'));
+  var imgData = fs.readFileSync(path.resolve('src/assets/avatar.jpg'));
   var stringData = Buffer.from(imgData).toString('base64');
-  var imgContentType = 'image/png';
+  var imgContentType = 'image/jpg';
 
   var imageString = 'data:' + imgContentType + ';base64,' + stringData;
 
