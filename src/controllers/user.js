@@ -338,7 +338,8 @@ const updatePicture = (req, res) => {
     Key: req.userId,
     Body: buf,
     ContentEncoding: 'base64',
-    ContentType: contentType
+    ContentType: contentType,
+    ACL: 'public-read'
   };
   s3Bucket.putObject(params, function(err, data) {
     if (err) {
