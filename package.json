@@ -27,6 +27,7 @@
     "devstart": "nodemon ./index.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.264.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
