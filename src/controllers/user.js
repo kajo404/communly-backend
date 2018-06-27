@@ -327,15 +327,18 @@ const updatePicture = (req, res) => {
       message: 'The request body must contain a image property'
     });
 
-  var update = { image: req.body.imageData };
-  var contentType = update.image.slice(5, update.image.indexOf(';'));
+  var contentType = req.body.imageData.slice(
+    5,
+    req.body.imageData.indexOf(';')
+  );
   var buf = new Buffer(
-    update.image.replace(/^data:image\/\w+;base64,/, ''),
+    req.body.imageData.replace(/^data:image\/\w+;base64,/, ''),
     'base64'
   );
+  var imageName = req.userId + '.' + contentType.split('/')[1];
   var s3Bucket = new AWS.S3({ params: { Bucket: myBucket } });
   var params = {
-    Key: req.userId,
+    Key: imageName,
     Body: buf,
     ContentEncoding: 'base64',
     ContentType: contentType,
@@ -345,7 +348,28 @@ const updatePicture = (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Successfully uploaded data to myBucket/myKey');
+      var imageURL =
+        'https://s3.eu-central-1.amazonaws.com/communly-images/' + imageName;
+      var update = {
+        image: imageURL
+      };
+      UserModel.findByIdAndUpdate(req.userId, update)
+        .exec()
+        .then(user => {
+          if (!user)
+            return res.status(404).json({
+              error: 'Not Found',
+              message: `User not found`
+            });
+
+          res.status(200).json(user);
+        })
+        .catch(error =>
+          res.status(500).json({
+            error: 'Internal Server Error',
+            message: error.message
+          })
+        );
     }
   });
 };
