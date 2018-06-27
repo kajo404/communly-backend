@@ -8,9 +8,6 @@ const AnnouncementModel = require('../models/announcement');
 const bcrypt = require('bcryptjs');
 const AWS = require('aws-sdk');
 
-var s3 = new AWS.S3();
-var myBucket = 'communly-images';
-
 const getAll = (req, res) => {
   UserModel.find({}, 'firstname lastname image')
     .exec()
@@ -336,7 +333,7 @@ const updatePicture = (req, res) => {
     'base64'
   );
   var imageName = req.userId + '.' + contentType.split('/')[1];
-  var s3Bucket = new AWS.S3({ params: { Bucket: myBucket } });
+  var s3Bucket = new AWS.S3({ params: { Bucket: 'communly-images' } });
   var params = {
     Key: imageName,
     Body: buf,
