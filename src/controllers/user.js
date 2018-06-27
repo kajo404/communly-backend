@@ -6,9 +6,13 @@ const TaskModel = require('../models/task');
 const TaskListModel = require('../models/taskList');
 const AnnouncementModel = require('../models/announcement');
 const bcrypt = require('bcryptjs');
+const AWS = require('aws-sdk');
+
+var s3 = new AWS.S3();
+var myBucket = 'communly-images';
 
 const getAll = (req, res) => {
-  UserModel.find({}, 'firstname lastname image')
+  UserModel.find({}, 'firstname lastname')
     .exec()
     .then(users => {
       res.status(200).json({
@@ -324,26 +328,26 @@ const updatePicture = (req, res) => {
     });
 
   var update = { image: req.body.imageData };
-
-  UserModel.findByIdAndUpdate(req.userId, update)
-    .exec()
-    .then(user => {
-      if (!user)
-        return res.status(404).json({
-          error: 'Not Found',
-          message: `User not found`
-        });
-
-      res.status(200).json(user);
-    })
-    .catch(error =>
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: error.message
-      })
-    );
+  var contentType = update.image.slice(5, update.image.indexOf(';'));
+  var buf = new Buffer(
+    update.image.replace(/^data:image\/\w+;base64,/, ''),
+    'base64'
+  );
+  var s3Bucket = new AWS.S3({ params: { Bucket: myBucket } });
+  var params = {
+    Key: req.userId,
+    Body: buf,
+    ContentEncoding: 'base64',
+    ContentType: contentType
+  };
+  s3Bucket.putObject(params, function(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Successfully uploaded data to myBucket/myKey');
+    }
+  });
 };
-
 /**
  * @api {get} /tasks for user
  * @apiName getAsignedTasks
