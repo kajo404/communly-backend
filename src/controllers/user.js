@@ -12,7 +12,7 @@ var s3 = new AWS.S3();
 var myBucket = 'communly-images';
 
 const getAll = (req, res) => {
-  UserModel.find({}, 'firstname lastname')
+  UserModel.find({}, 'firstname lastname image')
     .exec()
     .then(users => {
       res.status(200).json({
