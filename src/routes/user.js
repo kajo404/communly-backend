@@ -27,6 +27,11 @@ router.get(
   middlewares.checkAuthentication,
   UsersController.getAsignedTasks
 );
+router.get(
+  '/otherUser/:externalUserId',
+  middlewares.checkAuthentication,
+  UsersController.getOtherUser
+);
 
 router.put(
   '/picture',
