@@ -135,19 +135,13 @@ const register = (req, res) => {
       message: 'The request body must contain a email property'
     });
 
-  var imgData = fs.readFileSync(path.resolve('src/assets/avatar.png'));
-  var stringData = Buffer.from(imgData).toString('base64');
-  var imgContentType = 'image/jpg';
-
-  var imageString = 'data:' + imgContentType + ';base64,' + stringData;
-
   const user = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     password: bcrypt.hashSync(req.body.password, 8),
     dateOfBirth: req.body.dateOfBirth,
     email: req.body.email,
-    image: imageString
+    image: 'https://s3.eu-central-1.amazonaws.com/communly-images/avatar.png'
   };
 
   UserModel.create(user)

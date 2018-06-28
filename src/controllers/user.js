@@ -6,6 +6,7 @@ const TaskModel = require('../models/task');
 const TaskListModel = require('../models/taskList');
 const AnnouncementModel = require('../models/announcement');
 const bcrypt = require('bcryptjs');
+const AWS = require('aws-sdk');
 
 const getAll = (req, res) => {
   UserModel.find({}, 'firstname lastname image')
@@ -323,27 +324,52 @@ const updatePicture = (req, res) => {
       message: 'The request body must contain a image property'
     });
 
-  var update = { image: req.body.imageData };
+  var contentType = req.body.imageData.slice(
+    5,
+    req.body.imageData.indexOf(';')
+  );
+  var buf = new Buffer(
+    req.body.imageData.replace(/^data:image\/\w+;base64,/, ''),
+    'base64'
+  );
+  var imageName = req.userId + '.' + contentType.split('/')[1];
+  var s3Bucket = new AWS.S3({ params: { Bucket: 'communly-images' } });
+  var params = {
+    Key: imageName,
+    Body: buf,
+    ContentEncoding: 'base64',
+    ContentType: contentType,
+    ACL: 'public-read'
+  };
+  s3Bucket.putObject(params, function(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      var imageURL =
+        'https://s3.eu-central-1.amazonaws.com/communly-images/' + imageName;
+      var update = {
+        image: imageURL
+      };
+      UserModel.findByIdAndUpdate(req.userId, update)
+        .exec()
+        .then(user => {
+          if (!user)
+            return res.status(404).json({
+              error: 'Not Found',
+              message: `User not found`
+            });
 
-  UserModel.findByIdAndUpdate(req.userId, update)
-    .exec()
-    .then(user => {
-      if (!user)
-        return res.status(404).json({
-          error: 'Not Found',
-          message: `User not found`
-        });
-
-      res.status(200).json(user);
-    })
-    .catch(error =>
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: error.message
-      })
-    );
+          res.status(200).json(user);
+        })
+        .catch(error =>
+          res.status(500).json({
+            error: 'Internal Server Error',
+            message: error.message
+          })
+        );
+    }
+  });
 };
-
 /**
  * @api {get} /tasks for user
  * @apiName getAsignedTasks
