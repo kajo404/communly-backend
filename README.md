@@ -1,6 +1,6 @@
 # Communly Backend
 
-The communly frontend application can be found [here](https://github.com/kajo404/communly-frontend)
+The communly frontend application can be found [here](https://github.com/kajo404/communly-frontend), created in collaboration with [@EricssonX](https://github.com/EricssonX),[@laramarie](https://github.com/laramarie) and [@yasna13](https://github.com/yasna13).
 
 
 ## Setup (before first run)
