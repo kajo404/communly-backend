@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 const AWS = require('aws-sdk');
 
 const getAll = (req, res) => {
-  UserModel.find({}, 'firstname lastname image')
+  UserModel.find({}, '_id firstname lastname image')
     .exec()
     .then(users => {
       res.status(200).json({
@@ -412,12 +412,55 @@ const getAsignedTasks = (req, res) => {
     });
 };
 
+/**
+ * @api {get} /user/otherUer Other user
+ * @apiName OtherUser
+ * @apiGroup User
+ *
+ * @apiSuccess {User} _id user.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+          "_id": "5afc47f1234d724bc4c90b44"
+       }
+ *
+ * @apiError Unauthorized Token is not viable.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {
+          "error": "Not Found",
+          "message": "User not found"
+       }
+ */
+const getOtherUser = (req, res) => {
+  UserModel.findById(req.params.externalUserId)
+    .exec()
+    .then(user => {
+      if (!user)
+        return res.status(404).json({
+          error: 'Not Found',
+          message: `User not found`
+        });
+
+      res.status(200).json(user);
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: error.message
+      });
+      console.log(error);
+    });
+};
+
 module.exports = {
   getAll,
   getAnnoncements,
   getTasklistsAsMemeber,
   getTasklistsAsAuthor,
   getAsignedTasks,
+  getOtherUser,
   updateData,
   updatePassword,
   updatePicture
